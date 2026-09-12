@@ -41,6 +41,18 @@ if not auth_user and token:
         st.session_state["authenticated_user"] = auth_user
         st.session_state["authenticated_candidate_id"] = auth_user.candidate_id
 
+if settings.is_demo_mode and not auth_user:
+    from careerpilot.models.auth import User
+    auth_user = User(
+        id="usr_trupti_kularkar",
+        email="kularkartrupti123@gmail.com",
+        full_name="Trupti Kularkar",
+        is_active=True,
+        candidate_id="trupti_kularkar",
+    )
+    st.session_state["authenticated_user"] = auth_user
+    st.session_state["authenticated_candidate_id"] = "trupti_kularkar"
+
 if not auth_user and not settings.is_demo_mode:
     render_login_page()
     st.stop()

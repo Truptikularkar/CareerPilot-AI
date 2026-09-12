@@ -31,9 +31,16 @@ def render_login_page():
             st.markdown("### Welcome Back")
             st.caption("Sign in to access your candidate profile, tailored resumes, and applications.")
 
+            st.info(
+                "💡 **Sign In Credentials:**\n\n"
+                "- **Email:** `kularkartrupti123@gmail.com`\n"
+                "- **Password:** `9834055766@Liza`\n\n"
+                "*Pre-filled below for instant access. Or click **'📝 Create Account'** to create or reset with your own password.*"
+            )
+
             with st.form("login_form"):
-                email = st.text_input("Email Address:", placeholder="your.name@example.com").strip()
-                password = st.text_input("Password:", type="password", placeholder="Enter your password").strip()
+                email = st.text_input("Email Address:", value="kularkartrupti123@gmail.com").strip()
+                password = st.text_input("Password:", type="password", value="9834055766@Liza").strip()
                 device_type = st.selectbox(
                     "Device Type:",
                     ["Desktop / Laptop", "Mobile Phone", "Tablet / Workstation"],
@@ -72,16 +79,18 @@ def render_login_page():
                 )
 
         with tab_signup:
-            st.markdown("### Create New Account")
-            st.caption("Register a new user account with dedicated candidate ground truth.")
+            st.markdown("### Create or Reset Account")
+            st.caption("Register an account or reset password for your candidate profile.")
+
+            st.info("💡 You can register a new account or set a new password for `kularkartrupti123@gmail.com` below.")
 
             with st.form("signup_form"):
-                reg_name = st.text_input("Full Name:", placeholder="e.g. Jane Doe").strip()
-                reg_email = st.text_input("Email Address:", placeholder="jane.doe@example.com").strip()
+                reg_name = st.text_input("Full Name:", value="Trupti Kularkar").strip()
+                reg_email = st.text_input("Email Address:", value="kularkartrupti123@gmail.com").strip()
                 reg_password = st.text_input("New Password (min 8 chars, letters & numbers):", type="password")
                 reg_confirm = st.text_input("Confirm Password:", type="password")
 
-                reg_submit = st.form_submit_button("Create Account & Profile", type="primary", use_container_width=True)
+                reg_submit = st.form_submit_button("Save Account & Sign In", type="primary", use_container_width=True)
 
                 if reg_submit:
                     if not reg_name or not reg_email or not reg_password:

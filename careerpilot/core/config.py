@@ -20,6 +20,21 @@ def _get_secret_or_env(key: str, default: Optional[str] = None) -> Optional[str]
     return default
 
 
+def _determine_mode() -> AppEnvironmentMode:
+    mode_raw = _get_secret_or_env("CAREERPILOT_MODE")
+    if mode_raw:
+        try:
+            return AppEnvironmentMode(str(mode_raw).strip().upper())
+        except Exception:
+            pass
+    # If running on Streamlit Cloud (indicated by /mount/src or typical Streamlit cloud environment)
+    if Path("/mount/src").exists() or os.environ.get("STREAMLIT_SHARING_MODE") or os.environ.get("STREAMLIT_SERVER_PORT"):
+        return AppEnvironmentMode.DEMO
+    if (Path(__file__).resolve().parent.parent.parent / "data" / "candidate" / "profile.yaml").exists():
+        return AppEnvironmentMode.LOCAL_PRIVATE
+    return AppEnvironmentMode.DEMO
+
+
 class Settings(BaseSettings):
     # Application Info
     APP_NAME: str = "CareerPilot AI"
@@ -27,9 +42,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Environment Mode: DEMO (synthetic public) vs LOCAL_PRIVATE (local verified)
-    CAREERPILOT_MODE: AppEnvironmentMode = Field(
-        default_factory=lambda: AppEnvironmentMode(os.environ.get("CAREERPILOT_MODE", "LOCAL_PRIVATE" if (Path(__file__).resolve().parent.parent.parent / "data" / "candidate" / "profile.yaml").exists() else "DEMO"))
-    )
+    CAREERPILOT_MODE: AppEnvironmentMode = Field(default_factory=_determine_mode)
 
     # Base Paths
     BASE_DIR: Path = Field(default_factory=lambda: Path(__file__).resolve().parent.parent.parent)
@@ -59,10 +72,14 @@ class Settings(BaseSettings):
 
     # Embedding & Vector Database
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
-    CHROMA_PERSIST_DIRECTORY: str = "./data/chroma_db"
+    CHROMA_PERSIST_DIRECTORY: str = Field(
+        default_factory=lambda: str(Path(__file__).resolve().parent.parent.parent / "data" / "chroma_db")
+    )
 
     # SQLite Database
-    SQLITE_DB_PATH: str = "./data/careerpilot.db"
+    SQLITE_DB_PATH: str = Field(
+        default_factory=lambda: str(Path(__file__).resolve().parent.parent.parent / "data" / "careerpilot.db")
+    )
 
     # Scoring Weights (Configurable)
     WEIGHT_MUST_HAVE: float = 0.35
