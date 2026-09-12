@@ -12,7 +12,7 @@ from careerpilot.core.constants import (
 class ResumeHeader(BaseModel):
     """Candidate contact and identity header."""
     full_name: str = "Trupti Kularkar"
-    email: Optional[str] = "kularkartrupti@gmail.com"
+    email: Optional[str] = "kularkartrupti123@gmail.com"
     phone: Optional[str] = "+91 9834055766"
     location: Optional[str] = "Pune, Maharashtra, India"
     linkedin_url: Optional[str] = "https://linkedin.com/in/trupti-kularkar"

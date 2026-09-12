@@ -175,18 +175,27 @@ def init_db() -> None:
         from argon2 import PasswordHasher
         ph = PasswordHasher()
 
-        trupti_user = db.query(UserDB).filter(UserDB.email == "kularkartrupti@gmail.com").first()
+        target_email = "kularkartrupti123@gmail.com"
+        target_password = ph.hash("9834055766@Liza")
+
+        trupti_user = db.query(UserDB).filter(
+            (UserDB.email == target_email) | (UserDB.email == "kularkartrupti@gmail.com")
+        ).first()
         if not trupti_user:
             trupti_user = UserDB(
                 id="usr_trupti_kularkar",
-                email="kularkartrupti@gmail.com",
-                password_hash=ph.hash("TruptiCareerPilot2026!"),
+                email=target_email,
+                password_hash=target_password,
                 full_name="Trupti Kularkar",
                 is_active=True,
             )
             db.add(trupti_user)
             db.commit()
             db.refresh(trupti_user)
+        else:
+            trupti_user.email = target_email
+            trupti_user.password_hash = target_password
+            db.commit()
 
         if cand_verified and not cand_verified.user_id:
             cand_verified.user_id = trupti_user.id

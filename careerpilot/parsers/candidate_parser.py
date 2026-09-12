@@ -254,7 +254,7 @@ class CandidateParser:
         profile = CandidateProfile(
             id="trupti_kularkar",
             full_name=name,
-            email="kularkartrupti@gmail.com",
+            email="kularkartrupti123@gmail.com",
             phone="+91 9834055766",
             location=location,
             linkedin_url="https://linkedin.com/in/trupti-kularkar",
