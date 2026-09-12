@@ -1,3 +1,11 @@
+import sys
+from pathlib import Path
+
+# Ensure root directory is in sys.path for Streamlit Cloud deployment
+_ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(_ROOT_DIR))
+
 import streamlit as st
 
 st.set_page_config(page_title="About — CareerPilot AI", page_icon="ℹ️", layout="wide")
