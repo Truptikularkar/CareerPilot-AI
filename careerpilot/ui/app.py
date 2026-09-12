@@ -23,6 +23,8 @@ st.set_page_config(
 # Startup Vector Store & DB Check (Cached across reruns)
 @st.cache_resource
 def initialize_system():
+    from careerpilot.db.session import init_db
+    init_db()
     return build_or_load_indexes(force_reindex=False)
 
 initialize_system()

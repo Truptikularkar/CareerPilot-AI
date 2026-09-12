@@ -149,6 +149,10 @@ class AuthService:
         Creates an active session and returns (User, raw_session_token).
         """
         email_clean = email.strip().lower()
+        password_clean = password.strip()
+
+        from careerpilot.db.session import init_db
+        init_db()
 
         with get_db() as db:
             user_db = db.query(UserDB).filter(UserDB.email == email_clean).first()
@@ -160,7 +164,7 @@ class AuthService:
                 logger.warning("Login attempted for deactivated account: %s", email_clean)
                 raise ValueError("Account is deactivated. Please contact support.")
 
-            if not cls.verify_password(user_db.password_hash, password):
+            if not cls.verify_password(user_db.password_hash, password_clean):
                 logger.warning("Invalid password for user: %s", email_clean)
                 raise ValueError("Invalid email or password.")
 

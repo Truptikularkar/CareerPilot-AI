@@ -33,7 +33,7 @@ def render_login_page():
 
             with st.form("login_form"):
                 email = st.text_input("Email Address:", placeholder="your.name@example.com").strip()
-                password = st.text_input("Password:", type="password", placeholder="Enter your password")
+                password = st.text_input("Password:", type="password", placeholder="Enter your password").strip()
                 device_type = st.selectbox(
                     "Device Type:",
                     ["Desktop / Laptop", "Mobile Phone", "Tablet / Workstation"],
