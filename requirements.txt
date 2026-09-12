@@ -11,6 +11,7 @@ pydantic-settings>=2.4.0
 python-dotenv>=1.0.1
 PyYAML>=6.0.1
 argon2-cffi>=23.1.0
+email-validator>=2.0.0
 
 # Vector DB & Embeddings
 chromadb>=0.5.5
