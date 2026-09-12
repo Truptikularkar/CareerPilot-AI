@@ -1,0 +1,22 @@
+Job Title: Data Engineer (Python / SQL / Airflow)
+Company: Nexus Infotech
+Location: Pune, India
+Experience Required: 2-3 years
+
+Job Description:
+Nexus Infotech is hiring a Data Engineer to build resilient ETL pipelines. AWS cloud experience is preferred, but strong experience with another major cloud platform (GCP / Azure) is fully acceptable.
+
+Responsibilities:
+- Write optimized Python ETL scripts and advanced SQL queries.
+- Build and orchestrate DAGs in Apache Airflow.
+- Perform automated data validation, null checks, and duplicate detection.
+- Work with cloud storage (S3 / GCS) and cloud data warehouses.
+
+Required Skills (Must Have):
+- 2+ years of production experience in Python and SQL.
+- Strong experience with Apache Airflow for pipeline automation.
+- Proven track record in data quality frameworks and ETL pipeline design.
+
+Preferred Skills (Nice to Have):
+- Experience with AWS (S3, Redshift) or GCP (BigQuery, GCS).
+- Experience with Docker and CI/CD.

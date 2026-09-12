@@ -1,0 +1,83 @@
+career_preferences:
+  career_goal: >
+    Secure a role that provides strong long-term career growth in AI/GenAI and
+    Data Engineering, with hands-on engineering responsibilities.
+
+  experience_level:
+    current: "1.9+ years"
+    target_roles: "Approximately 1-4 years experience roles"
+
+  role_preferences:
+    highest_priority:
+      - "AI Data Engineer"
+      - "Data Engineer"
+      - "GenAI Engineer"
+      - "AI Engineer"
+    secondary:
+      - "GCP Data Engineer"
+      - "Cloud Data Engineer"
+
+  location:
+    primary:
+      - "Pune"
+      - "Nagpur"
+    remote: "Consider when otherwise suitable"
+    other_locations: "Not a current priority"
+
+  company_preference:
+    first_priority:
+      - "Service-based companies"
+    second_priority:
+      - "Product-based companies"
+    note: >
+      User wants to try both service-based and product-based companies, with
+      service-based companies as the first preference.
+
+  compensation:
+    current_ctc_lpa: 4.5
+    target_ctc_lpa:
+      minimum: 9
+      maximum: 10
+    intent: >
+      Target a meaningful growth-oriented switch; compensation is important
+      but should not override role quality and career growth.
+
+  technical_direction:
+    high:
+      - "Data Engineering"
+      - "Generative AI"
+      - "RAG"
+      - "LLM applications"
+      - "AI agents"
+      - "Python"
+      - "SQL"
+      - "GCP"
+      - "BigQuery"
+      - "Airflow"
+      - "Data quality"
+      - "ETL/ELT"
+    medium:
+      - "Spark"
+      - "Cloud data engineering"
+      - "AWS transferable skills"
+    low:
+      - "Pure ML research"
+      - "Research-heavy roles without engineering ownership"
+
+  application_decision_preferences:
+    strongly_prefer:
+      - "Roles where AI/GenAI and/or Data Engineering are core responsibilities"
+      - "Roles aligned with existing verified experience"
+      - "Roles with meaningful growth potential"
+      - "Pune or Nagpur opportunities"
+    review_carefully:
+      - "Roles with a misleading AI title but mostly unrelated work"
+      - "Roles requiring extensive unsupported production technologies"
+      - "Roles that are primarily research rather than engineering"
+    do_not_auto_reject_only_because:
+      - "A secondary JD skill is missing"
+      - "The company is product-based"
+      - "The role asks for AWS but the candidate's production cloud experience is GCP"
+    decision_note: >
+      The system should explain trade-offs and use APPLY / REVIEW / SKIP rather
+      than making a hard decision from keyword counts alone.

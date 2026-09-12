@@ -1,0 +1,3 @@
+"""
+CareerPilot AI Core Package
+"""

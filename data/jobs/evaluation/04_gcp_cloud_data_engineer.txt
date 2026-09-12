@@ -1,0 +1,19 @@
+Job Title: GCP Cloud Data Engineer
+Company: CloudScale Analytics
+Location: Nagpur, Maharashtra (Hybrid / Remote)
+Experience Required: 2-3 years
+
+Responsibilities:
+- Build event-driven streaming pipelines on GCP (Cloud Storage -> Pub/Sub -> Cloud Functions -> BigQuery).
+- Manage and schedule Apache Airflow DAGs for batch validation.
+- Implement cost optimization strategies across BigQuery analytical workloads.
+- Support data governance and automated data quality audits.
+
+Requirements (Must Have):
+- 2+ years experience building data pipelines with Python and SQL.
+- Strong hands-on experience with GCP (BigQuery, Pub/Sub, Cloud Storage, Cloud Functions).
+- Production experience with Apache Airflow.
+
+Nice to Have:
+- Google Cloud Certified Associate or Professional Data Engineer certification.
+- Experience with Cloud Run or Vertex AI.

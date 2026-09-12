@@ -1,0 +1,23 @@
+Job Title: Data & AI Platform Engineer
+Company: StreamVibe SaaS (Product Company)
+Location: Pune, Maharashtra (Hybrid)
+Experience Required: 2-3 years
+
+About StreamVibe:
+StreamVibe is a fast-growing B2B product company building AI-driven video intelligence software.
+
+Key Responsibilities:
+- Build reliable event-driven data pipelines ingesting telemetry into BigQuery using Python and GCP.
+- Implement automated data quality checks and anomaly detection algorithms.
+- Deploy internal RAG search agents assisting customer support teams using Gemini and Vertex AI.
+- Manage Airflow DAGs for automated reporting and analytics.
+
+Requirements (Must Have):
+- 2+ years experience building data and AI pipelines in Python and SQL.
+- Strong hands-on experience with GCP (BigQuery, Pub/Sub, Cloud Storage).
+- Production or project experience with RAG, vector search, or LLM agents.
+- Experience with Apache Airflow.
+
+Nice to Have:
+- Experience in a SaaS or product-led engineering environment.
+- Familiarity with Docker and FastAPI.

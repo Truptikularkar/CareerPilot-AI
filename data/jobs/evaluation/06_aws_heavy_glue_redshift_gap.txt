@@ -1,0 +1,19 @@
+Job Title: Senior AWS Big Data Engineer
+Company: CloudPioneer Global
+Location: Bangalore, India
+Experience Required: 4-6 years
+
+Job Description:
+We are seeking a Senior AWS Big Data Engineer with deep, specialized production expertise in the AWS analytics ecosystem.
+
+Responsibilities:
+- Architect complex ETL data pipelines using AWS Glue, AWS EMR, and Amazon Redshift.
+- Optimize Redshift distribution styles, sort keys, and WLM queues.
+- Build real-time event streaming architectures using Amazon Kinesis and AWS Lambda.
+- Enforce IAM role policies and AWS KMS encryption standards.
+
+Required Skills (Must Have):
+- 4+ years of dedicated, hands-on production engineering exclusively on AWS.
+- Mandatory deep expertise in AWS Glue, EMR, Redshift, and Kinesis.
+- AWS Certified Data Analytics Specialty or AWS Solutions Architect certification required.
+- Advanced Python and Spark on EMR.

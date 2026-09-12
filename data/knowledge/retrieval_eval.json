@@ -1,0 +1,110 @@
+{
+  "description": "Evaluation dataset for CareerPilot AI Dual-Store RAG retrieval verification",
+  "version": "1.0",
+  "queries": [
+    {
+      "id": "eval_01",
+      "query": "How did the candidate optimize BigQuery query costs?",
+      "expected_store": "candidate",
+      "expected_topics": ["BigQuery", "partitioning", "clustering"],
+      "expected_source": "experience.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_02",
+      "query": "What RAG project did the candidate build?",
+      "expected_store": "candidate",
+      "expected_topics": ["Local RAG", "FAISS", "BM25", "Reciprocal Rank Fusion"],
+      "expected_source": "projects.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_03",
+      "query": "Describe candidate's Airflow DAG automation experience and metrics",
+      "expected_store": "candidate",
+      "expected_topics": ["Airflow", "DAGs", "operational overhead", "failure response"],
+      "expected_source": "experience.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_04",
+      "query": "Tell me about the AI AutoHeal automated remediation agent",
+      "expected_store": "candidate",
+      "expected_topics": ["AI AutoHeal", "Cloud Run", "Gemini 2.5 Pro", "Airflow"],
+      "expected_source": "projects.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_05",
+      "query": "What candidate achievements relate to data quality incident reduction?",
+      "expected_store": "candidate",
+      "expected_topics": ["data quality", "35%", "incidents", "validation"],
+      "expected_source": "achievements.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_06",
+      "query": "What is the candidate's degree, university, and graduation year?",
+      "expected_store": "candidate",
+      "expected_topics": ["B.Tech", "Artificial Intelligence", "Raisoni", "2024"],
+      "expected_source": "profile.yaml",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_07",
+      "query": "What is reciprocal rank fusion and how does RRF score documents?",
+      "expected_store": "interview",
+      "expected_topics": ["RRF", "Reciprocal Rank Fusion", "Hybrid Retrieval", "BM25", "dense"],
+      "expected_source": "rag.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_08",
+      "query": "How do window functions work in SQL compared to GROUP BY?",
+      "expected_store": "interview",
+      "expected_topics": ["SQL", "window functions", "PARTITION BY", "ROW_NUMBER"],
+      "expected_source": "sql.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_09",
+      "query": "Explain event-driven real-time ETL pipeline design on Google Cloud",
+      "expected_store": "interview",
+      "expected_topics": ["GCP", "Pub/Sub", "Cloud Functions", "Cloud Storage", "BigQuery"],
+      "expected_source": "gcp.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_10",
+      "query": "What are the core dimensions of data quality validation in modern pipelines?",
+      "expected_store": "interview",
+      "expected_topics": ["Completeness", "Uniqueness", "Consistency", "Validity", "Data Quality"],
+      "expected_source": "data_engineering.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_11",
+      "query": "How does LangGraph handle cyclic agent workflows and state persistence?",
+      "expected_store": "interview",
+      "expected_topics": ["LangGraph", "StateGraph", "checkpointing", "conditional routing"],
+      "expected_source": "langgraph.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_12",
+      "query": "What is the difference between narrow and wide transformations in Spark?",
+      "expected_store": "interview",
+      "expected_topics": ["Spark", "narrow", "wide", "shuffle", "Broadcast Joins"],
+      "expected_source": "spark.md",
+      "minimum_relevance": 0.5
+    },
+    {
+      "id": "eval_13",
+      "query": "How do AWS cloud data services map to Google Cloud Platform equivalents?",
+      "expected_store": "interview",
+      "expected_topics": ["S3", "GCS", "Redshift", "BigQuery", "Lambda", "Cloud Functions"],
+      "expected_source": "aws.md",
+      "minimum_relevance": 0.5
+    }
+  ]
+}

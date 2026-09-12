@@ -1,0 +1,23 @@
+Job Title: Generative AI / RAG Engineer
+Company: NeuralPath Technologies
+Location: Pune, Maharashtra
+Experience Required: 1-3 years
+
+Job Description:
+NeuralPath builds specialized enterprise knowledge retrieval and LLM agent platforms. We need an engineer skilled in prompt orchestration, RAG architectures, and vector search.
+
+Responsibilities:
+- Build and evaluate RAG pipelines using hybrid retrieval (FAISS, BM25, Reciprocal Rank Fusion).
+- Develop autonomous multi-agent task execution and self-healing agent workflows.
+- Integrate LLM APIs (Gemini, Vertex AI) for automated ticket resolution and document extraction.
+- Implement strict grounding and truth verification guardrails to eliminate hallucinations.
+
+Required Skills (Must Have):
+- 1-3 years experience in Python backend development.
+- Hands-on experience with RAG, vector databases, and dense/sparse hybrid search.
+- Experience with LLM orchestration frameworks (LangChain, LangGraph) or prompt engineering.
+- Solid understanding of SQL and data structures.
+
+Nice to Have:
+- Experience deploying microservices on GCP Cloud Run.
+- Background in data quality and automated evaluation pipelines.

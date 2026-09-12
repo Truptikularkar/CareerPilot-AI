@@ -1,0 +1,31 @@
+Job Title: Senior AI / GenAI Engineer
+Company: TechFlow AI
+Location: San Francisco, CA (Hybrid / Remote)
+Employment Type: Full-Time
+Experience Level: Senior (5+ years)
+
+About Us:
+TechFlow AI is pioneering enterprise-grade agentic knowledge intelligence. We help Fortune 500 organizations transform internal knowledge into autonomous, grounded decision agents.
+
+Job Summary:
+We are looking for a Senior AI / GenAI Engineer to architect, build, and deploy production-grade LLM applications and multi-agent workflows. You will design retrieval-augmented generation (RAG) systems, implement stateful agent graphs, optimize inference latency, and ensure zero-hallucination grounding across millions of documents.
+
+Key Responsibilities:
+- Design and implement scalable RAG architectures using LangChain, LangGraph, and ChromaDB/Pinecone.
+- Build production-ready RESTful microservices with FastAPI containerized on Docker and Kubernetes (GCP / AWS).
+- Implement robust evaluation pipelines to benchmark hallucination rates, retrieval recall, and answer faithfulness.
+- Optimize multi-agent orchestration graphs with state machines, tool calling, and conditional logic.
+- Collaborate with data engineering to build automated vector ingestion and chunking pipelines.
+
+Required Skills (Must Have):
+- 5+ years of software engineering and machine learning experience with Python.
+- 2+ years of hands-on experience building production LLM applications using LangChain, LangGraph, or LlamaIndex.
+- Deep expertise in RAG design: semantic chunking, dense/sparse hybrid search, and vector databases (ChromaDB, Pinecone, or Weaviate).
+- Strong backend development skills in Python and FastAPI.
+- Experience with cloud platforms (GCP or AWS) and containerization (Docker, Kubernetes).
+
+Preferred Skills (Nice to Have):
+- Experience with Google Gemini API, Vertex AI, or local LLMs (Ollama, vLLM).
+- Background in distributed data processing using Apache Spark or BigQuery.
+- Familiarity with continuous LLM evaluation and guardrail frameworks.
+- Strong knowledge of SQL and schema design.

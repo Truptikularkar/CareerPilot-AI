@@ -1,0 +1,28 @@
+Job Title: Lead Data Engineer
+Company: DataWave Global
+Location: Remote (US-based)
+Employment Type: Full-Time
+Experience Level: Lead / Staff (6+ years)
+
+About the Role:
+DataWave is building next-generation real-time data streaming and analytics platforms. We are seeking an experienced Lead Data Engineer to spearhead our modern data stack architecture, scaling batch and streaming workloads across terabytes of data daily.
+
+Responsibilities:
+- Architect and optimize distributed batch and streaming pipelines using Apache Spark, PySpark, and Google BigQuery.
+- Manage and scale enterprise workflow orchestration with Apache Airflow (Cloud Composer).
+- Define data modeling standards, star/snowflake schemas, and enforce automated data quality validations.
+- Lead migration of legacy data warehouses to modern cloud data platforms on GCP.
+- Collaborate with AI/ML teams to supply reliable, low-latency feature stores.
+
+Required Skills (Must Have):
+- 6+ years of production data engineering experience with strong proficiency in Python and SQL.
+- Deep expertise with Google BigQuery, partitioning, clustering, and performance optimization.
+- Extensive experience authoring complex DAGs in Apache Airflow.
+- Hands-on mastery of distributed processing with Apache Spark / PySpark.
+- Proven experience working with Google Cloud Platform (GCP).
+
+Preferred Skills (Nice to Have):
+- Experience with dbt (data build tool) and Great Expectations.
+- Familiarity with Kafka or GCP Pub/Sub streaming architectures.
+- Experience provisioning cloud infrastructure with Terraform.
+- Prior exposure to supporting RAG and LLM feature pipelines.

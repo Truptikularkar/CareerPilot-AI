@@ -1,0 +1,27 @@
+Job Title: AI Data Engineer
+Company: CognitiveScale Labs
+Location: Pune, Maharashtra (Hybrid)
+Employment Type: Full-Time
+Experience Required: 2-4 years
+
+About the Role:
+CognitiveScale Labs is expanding our data and AI platform team. We are looking for an AI Data Engineer to build high-throughput data validation pipelines and integrate LLM-based agentic workflows into our core data ecosystem.
+
+Key Responsibilities:
+- Design, build, and optimize automated ETL/ELT pipelines using Python, SQL, and Google BigQuery.
+- Author and maintain robust workflow orchestration DAGs in Apache Airflow.
+- Build and maintain data validation frameworks enforcing schema consistency, row-count reconciliation, and null checks.
+- Integrate generative AI models (Vertex AI, Gemini API) and RAG workflows into production data monitoring pipelines.
+- Implement event-driven ingestion using Cloud Storage, Pub/Sub, and Cloud Functions.
+
+Required Qualifications (Must Have):
+- 2+ years of production experience in Python and advanced SQL.
+- Hands-on experience with Google Cloud Platform (GCP) including BigQuery and Cloud Storage.
+- Proven experience authoring DAGs in Apache Airflow.
+- Hands-on experience or demonstrated project work with LLMs, RAG, and AI agents.
+- Strong focus on data quality, data validation, and automated pipeline monitoring.
+
+Preferred Qualifications (Nice to Have):
+- Experience with BigQuery ML for anomaly detection.
+- Familiarity with vector stores (FAISS, ChromaDB) and hybrid retrieval techniques.
+- Knowledge of containerization with Docker.

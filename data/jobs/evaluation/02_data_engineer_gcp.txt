@@ -1,0 +1,23 @@
+Job Title: Data Engineer — GCP & BigQuery
+Company: Enterprise DataWave Solutions
+Location: Pune, India / Remote
+Experience Required: 2-3 years
+
+Job Summary:
+Enterprise DataWave is seeking a Data Engineer to optimize analytics pipelines and manage enterprise data warehouses on Google Cloud.
+
+Key Responsibilities:
+- Build batch and real-time ETL pipelines ingesting hundreds of thousands of events daily into BigQuery.
+- Optimize BigQuery query performance and cost via table partitioning and clustering.
+- Automate data pipeline scheduling using Apache Airflow DAGs.
+- Implement automated data quality checks and duplicate detection logic in SQL.
+
+Requirements (Must Have):
+- 2+ years of data engineering experience with Python and SQL.
+- Strong proficiency in Google BigQuery, table design, and performance optimization.
+- Experience with Apache Airflow workflow orchestration.
+- Experience with GCP services including Cloud Storage and Pub/Sub.
+
+Preferred (Nice to Have):
+- Experience integrating AI-based alerting or automated remediation.
+- Familiarity with CI/CD deployment pipelines.

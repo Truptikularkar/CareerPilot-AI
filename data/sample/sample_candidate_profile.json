@@ -1,0 +1,178 @@
+{
+  "id": "cand_alex_rivera_001",
+  "full_name": "Alex Rivera",
+  "email": "alex.rivera.ai@example.com",
+  "phone": "+1 (555) 019-2834",
+  "linkedin_url": "https://linkedin.com/in/alexrivera-ai",
+  "github_url": "https://github.com/alexrivera-ai",
+  "portfolio_url": "https://alexrivera.dev",
+  "location": "San Francisco, CA (Open to Remote)",
+  "professional_summary": "Lead AI & Data Engineer with 6+ years of experience designing and deploying production-grade LLM architectures, agentic workflows, and distributed data pipelines. Proven track record in orchestrating multi-agent systems using LangGraph/LangChain, scaling RAG pipelines across millions of documents, and optimizing high-throughput ETL engines using Apache Spark, BigQuery, and GCP. Passionate about evidence-grounded AI systems and robust data platform engineering.",
+  "skills": [
+    {
+      "name": "Python",
+      "category": "Programming Language",
+      "years_of_experience": 6.0,
+      "proficiency_level": "Expert",
+      "verified": true,
+      "context": "Primary language for LLM orchestration, microservices (FastAPI), data pipelines, and PySpark."
+    },
+    {
+      "name": "SQL",
+      "category": "Programming Language",
+      "years_of_experience": 6.0,
+      "proficiency_level": "Expert",
+      "verified": true,
+      "context": "Advanced query optimization, window functions, BigQuery partitioning/clustering, and PostgreSQL schema design."
+    },
+    {
+      "name": "LangChain & LangGraph",
+      "category": "AI / ML / LLM",
+      "years_of_experience": 2.5,
+      "proficiency_level": "Expert",
+      "verified": true,
+      "context": "Architected multi-agent graph workflows with stateful memory, conditional routing, and tool calling."
+    },
+    {
+      "name": "RAG Architectures",
+      "category": "AI / ML / LLM",
+      "years_of_experience": 2.5,
+      "proficiency_level": "Expert",
+      "verified": true,
+      "context": "Hybrid dense/sparse retrieval, reranking, chunking optimization with ChromaDB and Pinecone."
+    },
+    {
+      "name": "GCP (Google Cloud Platform)",
+      "category": "Cloud & Infrastructure",
+      "years_of_experience": 4.5,
+      "proficiency_level": "Advanced",
+      "verified": true,
+      "context": "Architected solutions using BigQuery, Cloud Composer (Airflow), Vertex AI, GCS, and Cloud Run."
+    },
+    {
+      "name": "BigQuery",
+      "category": "Database",
+      "years_of_experience": 4.5,
+      "proficiency_level": "Expert",
+      "verified": true,
+      "context": "Designed analytical data warehouses processing over 15TB of streaming and batch data daily."
+    },
+    {
+      "name": "Apache Spark & PySpark",
+      "category": "Data Engineering & Pipeline",
+      "years_of_experience": 4.0,
+      "proficiency_level": "Advanced",
+      "verified": true,
+      "context": "Built distributed batch and streaming pipelines, tuning partition strategies and memory."
+    },
+    {
+      "name": "Apache Airflow",
+      "category": "Data Engineering & Pipeline",
+      "years_of_experience": 4.0,
+      "proficiency_level": "Advanced",
+      "verified": true,
+      "context": "Authored DAGs managing complex dependency workflows across cloud storage and data warehouses."
+    },
+    {
+      "name": "Docker & Kubernetes",
+      "category": "DevOps & Tooling",
+      "years_of_experience": 3.5,
+      "proficiency_level": "Intermediate",
+      "verified": true,
+      "context": "Containerized FastAPI microservices and deployed inference containers to GKE."
+    }
+  ],
+  "experiences": [
+    {
+      "id": "exp_01",
+      "company": "Nexus Enterprise AI",
+      "title": "Senior AI / GenAI Engineer",
+      "location": "San Francisco, CA",
+      "start_date": "2023-01",
+      "end_date": "Present",
+      "is_current": true,
+      "responsibilities": [
+        "Architected an enterprise RAG agentic platform using LangGraph, FastAPI, and ChromaDB serving 45,000+ monthly active enterprise users.",
+        "Implemented hybrid sparse-dense retrieval with cross-encoder reranking, reducing hallucination rate by 65% and query latency from 2.4s to 650ms.",
+        "Engineered autonomous multi-agent evaluation workflows in LangGraph to automatically stress-test model outputs against strict truthfulness criteria.",
+        "Led integration of Gemini 1.5 Pro and local Ollama models with fallback routing, reducing token infrastructure costs by 38%."
+      ],
+      "technologies_used": ["Python", "LangChain", "LangGraph", "FastAPI", "ChromaDB", "GCP", "Vertex AI", "Docker"],
+      "verified_metrics": [
+        "Reduced hallucination rate by 65%",
+        "Reduced query latency from 2.4s to 650ms (73% improvement)",
+        "Cut monthly token infrastructure costs by 38%",
+        "Scaled platform to 45,000+ monthly active enterprise users"
+      ]
+    },
+    {
+      "id": "exp_02",
+      "company": "DataStream Technologies",
+      "title": "Data Engineer / Platform Engineer",
+      "location": "San Jose, CA",
+      "start_date": "2020-06",
+      "end_date": "2022-12",
+      "is_current": false,
+      "responsibilities": [
+        "Engineered high-throughput batch and streaming ETL pipelines on GCP processing 15TB+ of log and transactional data per day.",
+        "Migrated legacy Redshift analytical workloads to Google BigQuery, designing optimized partitioned and clustered tables that lowered annual query compute costs by $140,000.",
+        "Developed and maintained 60+ modular Apache Airflow DAGs with automated data quality checks (Great Expectations), eliminating 99.2% of downstream schema breakages.",
+        "Built distributed PySpark pipelines on Dataproc to compute daily customer lifetime value (LTV) and propensity scores."
+      ],
+      "technologies_used": ["Python", "SQL", "BigQuery", "Apache Spark", "PySpark", "Apache Airflow", "GCP", "PostgreSQL"],
+      "verified_metrics": [
+        "Processed 15TB+ data per day",
+        "Saved $140,000 annually in query compute costs",
+        "Eliminated 99.2% of downstream data pipeline schema errors",
+        "Maintained 60+ production Airflow DAGs"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_01",
+      "name": "DocMind: Multi-Modal Agentic Knowledge Engine",
+      "description": "An open-source multi-agent document intelligence platform that extracts, verifies, and reasons over technical documents and complex charts.",
+      "technologies": ["Python", "LangGraph", "LangChain", "ChromaDB", "FastAPI", "Streamlit"],
+      "github_or_demo_url": "https://github.com/alexrivera-ai/docmind",
+      "highlights": [
+        "Designed cyclic multi-agent graph with specialized planner, retriever, auditor, and synthesizer nodes.",
+        "Implemented truth-verification step cross-referencing citations before returning final synthesis."
+      ],
+      "verified_metrics": ["1.2k+ GitHub stars", "99.4% citation accuracy in synthetic benchmarks"]
+    },
+    {
+      "id": "proj_02",
+      "name": "Real-time Telemetry Pipeline with PySpark & BigQuery",
+      "description": "High-throughput streaming pipeline ingesting IoT event streams into BigQuery and generating real-time anomaly alerts.",
+      "technologies": ["PySpark", "GCP Pub/Sub", "BigQuery", "Docker", "Terraform"],
+      "github_or_demo_url": "https://github.com/alexrivera-ai/telemetry-stream",
+      "highlights": [
+        "Processed 50,000 events/sec with sub-second sliding window aggregations."
+      ],
+      "verified_metrics": ["50,000 events/sec peak throughput", "Sub-second alerting latency"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of California, Berkeley",
+      "degree": "Bachelor of Science",
+      "field_of_study": "Computer Science & Data Science",
+      "graduation_year": "2020",
+      "gpa_or_honors": "Cum Laude (GPA: 3.82/4.0)"
+    }
+  ],
+  "certifications": [
+    "Google Cloud Certified: Professional Data Engineer (2022)",
+    "DeepLearning.AI: LangChain for LLM Application Development (2023)"
+  ],
+  "preferences": {
+    "target_roles": ["AI Engineer", "GenAI Engineer", "AI Data Engineer", "Data Engineer"],
+    "preferred_seniority": "Senior",
+    "work_modes": ["Remote", "Hybrid"],
+    "target_locations": ["San Francisco, CA", "Remote"],
+    "min_desired_comp": "$180,000",
+    "domains_of_interest": ["GenAI Infrastructure", "Enterprise AI Agents", "Data Platforms"]
+  },
+  "atomic_evidence": []
+}

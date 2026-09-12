@@ -1,0 +1,79 @@
+[
+  {
+    "query_id": "ret_cand_01",
+    "store": "candidate",
+    "query": "What Google Cloud Platform GCP technologies has the candidate used in production?",
+    "expected_keywords": ["BigQuery", "GCP", "Google Cloud", "Cloud Storage", "Airflow"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_cand_02",
+    "store": "candidate",
+    "query": "Which project involved local RAG and vector search with ChromaDB?",
+    "expected_keywords": ["RAG", "FAISS", "ChromaDB", "BM25", "Reciprocal Rank Fusion"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_cand_03",
+    "store": "candidate",
+    "query": "What was the verified BigQuery cost optimization and query performance result?",
+    "expected_keywords": ["BigQuery", "cost", "30%", "partitioning", "clustering"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_cand_04",
+    "store": "candidate",
+    "query": "How many daily event records were processed in the automated ETL pipeline?",
+    "expected_keywords": ["2.5M+", "ETL", "pipeline", "BigQuery"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_cand_05",
+    "store": "candidate",
+    "query": "What data validation and incident reduction framework was implemented?",
+    "expected_keywords": ["data quality", "validation", "45%", "incident", "Sentinel"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_cand_06",
+    "store": "candidate",
+    "query": "How many Apache Airflow DAGs were authored and maintained?",
+    "expected_keywords": ["Airflow", "DAGs", "40+"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_know_01",
+    "store": "knowledge",
+    "query": "How does BigQuery table partitioning and clustering optimize analytical query costs?",
+    "expected_keywords": ["partitioning", "clustering", "BigQuery", "slot", "bytes"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_know_02",
+    "store": "knowledge",
+    "query": "What are best practices for Apache Airflow idempotent DAGs and backfilling?",
+    "expected_keywords": ["Airflow", "idempotent", "DAG", "backfill", "retry"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_know_03",
+    "store": "knowledge",
+    "query": "How does hybrid retrieval with Reciprocal Rank Fusion RRF combine vector search and BM25?",
+    "expected_keywords": ["hybrid", "RRF", "Reciprocal Rank Fusion", "dense", "sparse"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_know_04",
+    "store": "knowledge",
+    "query": "What strategies prevent hallucinations in RAG retrieval systems?",
+    "expected_keywords": ["grounding", "guardrails", "RAG", "hallucination", "verification"],
+    "min_expected_matches": 1
+  },
+  {
+    "query_id": "ret_know_05",
+    "store": "knowledge",
+    "query": "How do you design high-throughput cloud streaming pipelines with Pub/Sub?",
+    "expected_keywords": ["Pub/Sub", "streaming", "throughput", "latency", "pipeline"],
+    "min_expected_matches": 1
+  }
+]

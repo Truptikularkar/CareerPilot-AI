@@ -1,0 +1,15 @@
+Job Title: Lead BI Dashboard & Tableau Developer
+Company: InsightMetrics Corp
+Location: Hyderabad, India
+Experience Required: 5+ years
+
+Responsibilities:
+- Build and maintain 100+ executive business intelligence dashboards in Tableau and Looker.
+- Author complex DAX and MDX calculation formulas.
+- Interface with non-technical business stakeholders for KPI requirement gathering.
+- Administer Tableau Server user permissions and refresh schedules.
+
+Requirements (Must Have):
+- 5+ years of dedicated experience in Tableau Desktop, Tableau Server, or Power BI.
+- Deep expertise in dashboard UI/UX visualization design for corporate finance.
+- Strong SQL for semantic reporting layer creation.

@@ -1,0 +1,37 @@
+[
+  {
+    "case_id": "int_eval_01",
+    "question": "How did you design automated ETL pipelines in Google BigQuery to process 2.5M+ daily event records?",
+    "category": "TECHNICAL_DEEP_DIVE",
+    "expected_relevance": "RELEVANT",
+    "is_evidence_grounded": true
+  },
+  {
+    "case_id": "int_eval_02",
+    "question": "Can you walk through your experience implementing table partitioning and clustering in BigQuery?",
+    "category": "TECHNICAL_CONCEPT",
+    "expected_relevance": "RELEVANT",
+    "is_evidence_grounded": true
+  },
+  {
+    "case_id": "int_eval_03",
+    "question": "Tell me about a time you designed an enterprise mainframe Cobol system in 1995.",
+    "category": "IRRELEVANT_OUT_OF_SCOPE",
+    "expected_relevance": "IRRELEVANT",
+    "is_evidence_grounded": false
+  },
+  {
+    "case_id": "int_eval_04",
+    "question": "How did you combine FAISS dense search and BM25 sparse search using Reciprocal Rank Fusion?",
+    "category": "SYSTEM_DESIGN",
+    "expected_relevance": "RELEVANT",
+    "is_evidence_grounded": true
+  },
+  {
+    "case_id": "int_eval_05",
+    "question": "Describe a production pipeline failure where an Airflow DAG failed and how your alerts triggered recovery.",
+    "category": "STAR_BEHAVIORAL",
+    "expected_relevance": "RELEVANT",
+    "is_evidence_grounded": true
+  }
+]

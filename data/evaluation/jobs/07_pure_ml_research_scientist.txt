@@ -1,0 +1,18 @@
+Job Title: AI Research Scientist — Fundamental Deep Learning
+Company: DeepMind Horizons
+Location: Bangalore / Hybrid
+Experience Required: 4+ years (or PhD)
+
+Job Description:
+DeepMind Horizons is looking for an AI Research Scientist to conduct fundamental research in novel neural network architectures, theoretical mathematical optimization, and novel transformer self-attention mechanisms.
+
+Responsibilities:
+- Conduct exploratory mathematical research in deep learning theory.
+- Implement novel loss functions and optimization algorithms in C++ and PyTorch.
+- Author scientific papers for top academic conferences (NeurIPS, ICML, ICLR).
+- Develop custom CUDA kernels for hardware acceleration.
+
+Requirements (Must Have):
+- PhD or equivalent research publication track record in Computer Science or Mathematics.
+- Deep expertise in theoretical machine learning, linear algebra, and calculus.
+- Extensive C++ and PyTorch research experience.

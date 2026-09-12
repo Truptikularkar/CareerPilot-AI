@@ -1,0 +1,45 @@
+candidate:
+  name: "Trupti Kularkar"
+  current_experience_years: "1.9+"
+  resume_snapshot_experience_years: "1.8+"
+  current_role: "Programmer Analyst"
+  current_company: "Cognizant Technology Solutions"
+  current_location: "Pune, Maharashtra, India"
+
+  education:
+    degree: "B.Tech (Artificial Intelligence)"
+    institution: "G. H. Raisoni College of Engineering, Nagpur"
+    graduation_year: 2024
+    cgpa: 8.83
+
+  certifications:
+    - "Google Cloud Certified Associate Data Practitioner"
+    - "Discover Data Analysis Badge by Microsoft"
+
+  primary_career_direction: >
+    Build a career at the intersection of AI/GenAI and Data Engineering.
+
+  target_roles:
+    - "AI Data Engineer"
+    - "Data Engineer"
+    - "AI Engineer"
+    - "GenAI Engineer"
+    - "GCP Data Engineer"
+    - "GCP Data Engineer / Cloud Data Engineer"
+
+  role_priority:
+    highest:
+      - "AI Data Engineer"
+      - "Data Engineer"
+      - "GenAI Engineer"
+      - "AI Engineer"
+    strong_secondary:
+      - "GCP Data Engineer"
+      - "Cloud Data Engineer"
+
+  source_of_truth:
+    resume: "candidate/master_resume.pdf"
+    note: >
+      Current user-provided experience is 1.9+ years; the uploaded resume snapshot
+      states 1.8+. Use 1.9+ for current profile-level decisions and preserve resume
+      wording when quoting the uploaded document.

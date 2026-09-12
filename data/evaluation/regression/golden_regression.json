@@ -1,0 +1,9 @@
+{
+  "benchmark_version": "1.0.0",
+  "expected_min_test_count": 115,
+  "expected_min_rag_recall": 0.85,
+  "expected_min_truth_guard_f1": 0.90,
+  "expected_min_job_analysis_f1": 0.80,
+  "expected_max_p95_latency_ms": 500.0,
+  "golden_cases_count": 5
+}

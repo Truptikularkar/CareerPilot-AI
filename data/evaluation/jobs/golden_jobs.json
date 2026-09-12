@@ -1,0 +1,231 @@
+[
+  {
+    "job_id": "eval_job_01",
+    "filename": "01_ai_data_engineer.txt",
+    "expected_role_category": "AI_DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "Apache Airflow",
+      "RAG"
+    ],
+    "expected_nice_to_haves": [
+      "Docker",
+      "FAISS"
+    ],
+    "expected_technologies": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "Airflow",
+      "GCP",
+      "RAG",
+      "FAISS",
+      "Docker"
+    ]
+  },
+  {
+    "job_id": "eval_job_02",
+    "filename": "02_data_engineer_gcp.txt",
+    "expected_role_category": "DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "GCP",
+      "Apache Airflow"
+    ],
+    "expected_nice_to_haves": [
+      "Data Quality",
+      "Docker"
+    ],
+    "expected_technologies": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "GCP",
+      "Airflow",
+      "Cloud Storage"
+    ]
+  },
+  {
+    "job_id": "eval_job_03",
+    "filename": "03_genai_rag_engineer.txt",
+    "expected_role_category": "AI_DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "Python",
+      "RAG",
+      "LLM",
+      "Vector Search"
+    ],
+    "expected_nice_to_haves": [
+      "FAISS",
+      "ChromaDB",
+      "LangChain"
+    ],
+    "expected_technologies": [
+      "Python",
+      "RAG",
+      "FAISS",
+      "BM25",
+      "Reciprocal Rank Fusion"
+    ]
+  },
+  {
+    "job_id": "eval_job_04",
+    "filename": "04_gcp_cloud_data_engineer.txt",
+    "expected_role_category": "GCP_DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "GCP",
+      "BigQuery",
+      "Cloud Storage",
+      "SQL"
+    ],
+    "expected_nice_to_haves": [
+      "Pub/Sub",
+      "Dataflow"
+    ],
+    "expected_technologies": [
+      "GCP",
+      "BigQuery",
+      "Cloud Storage",
+      "Pub/Sub",
+      "Python",
+      "SQL"
+    ]
+  },
+  {
+    "job_id": "eval_job_05",
+    "filename": "05_aws_data_engineer_transferable.txt",
+    "expected_role_category": "DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "Python",
+      "SQL",
+      "ETL",
+      "Redshift"
+    ],
+    "expected_nice_to_haves": [
+      "AWS S3",
+      "Glue"
+    ],
+    "expected_technologies": [
+      "Python",
+      "SQL",
+      "Redshift",
+      "AWS"
+    ]
+  },
+  {
+    "job_id": "eval_job_06",
+    "filename": "06_aws_heavy_glue_redshift_gap.txt",
+    "expected_role_category": "DATA_ENGINEER",
+    "expected_seniority": "SENIOR",
+    "expected_must_haves": [
+      "AWS Glue",
+      "Redshift",
+      "EMR",
+      "Python"
+    ],
+    "expected_nice_to_haves": [
+      "Athena"
+    ],
+    "expected_technologies": [
+      "AWS",
+      "Glue",
+      "Redshift",
+      "EMR",
+      "Python",
+      "SQL"
+    ]
+  },
+  {
+    "job_id": "eval_job_07",
+    "filename": "07_pure_ml_research_scientist.txt",
+    "expected_role_category": "DATA_SCIENTIST",
+    "expected_seniority": "MID",
+    "expected_must_haves": [
+      "PyTorch",
+      "Machine Learning",
+      "PhD"
+    ],
+    "expected_nice_to_haves": [
+      "Transformers",
+      "CUDA"
+    ],
+    "expected_technologies": [
+      "PyTorch",
+      "Python",
+      "ML"
+    ]
+  },
+  {
+    "job_id": "eval_job_08",
+    "filename": "08_staff_lead_10yr_seniority_gap.txt",
+    "expected_role_category": "DATA_ENGINEER",
+    "expected_seniority": "LEAD",
+    "expected_must_haves": [
+      "Data Architecture",
+      "Leadership",
+      "10+ years"
+    ],
+    "expected_nice_to_haves": [
+      "Mentorship"
+    ],
+    "expected_technologies": [
+      "Python",
+      "SQL",
+      "Cloud"
+    ]
+  },
+  {
+    "job_id": "eval_job_09",
+    "filename": "09_weakly_related_bi_analytics.txt",
+    "expected_role_category": "ANALYTICS_ENGINEER",
+    "expected_seniority": "LEAD",
+    "expected_must_haves": [
+      "Tableau",
+      "PowerBI",
+      "DAX",
+      "SQL"
+    ],
+    "expected_nice_to_haves": [
+      "Excel"
+    ],
+    "expected_technologies": [
+      "Tableau",
+      "PowerBI",
+      "SQL"
+    ]
+  },
+  {
+    "job_id": "eval_job_10",
+    "filename": "10_product_company_ai_data_engineer.txt",
+    "expected_role_category": "AI_DATA_ENGINEER",
+    "expected_seniority": "JUNIOR",
+    "expected_must_haves": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "Airflow",
+      "RAG"
+    ],
+    "expected_nice_to_haves": [
+      "Docker",
+      "FAISS"
+    ],
+    "expected_technologies": [
+      "Python",
+      "SQL",
+      "BigQuery",
+      "Airflow",
+      "GCP",
+      "RAG"
+    ]
+  }
+]

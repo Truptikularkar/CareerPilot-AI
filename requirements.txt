@@ -1,0 +1,36 @@
+# Core Frameworks & LLM Orchestration
+langchain>=0.2.14
+langchain-core>=0.2.35
+langgraph>=0.2.14
+langchain-google-genai>=1.0.8
+google-genai>=0.1.1
+
+# Data Models & Settings
+pydantic>=2.8.2
+pydantic-settings>=2.4.0
+python-dotenv>=1.0.1
+
+# Vector DB & Embeddings
+chromadb>=0.5.5
+sentence-transformers>=3.0.1
+
+# Document Processing
+pymupdf>=1.24.9
+python-docx>=1.1.2
+reportlab>=4.0.0
+
+
+# Database & Storage
+sqlalchemy>=2.0.32
+alembic>=1.13.2
+
+# Web UI & Visualization
+streamlit>=1.37.1
+plotly>=5.23.0
+pandas>=2.2.2
+
+# Utilities & Testing
+pytest>=8.3.2
+pytest-asyncio>=0.23.8
+tqdm>=4.66.5
+rich>=13.7.1

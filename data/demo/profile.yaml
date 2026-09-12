@@ -1,0 +1,52 @@
+id: "trupti_kularkar"
+full_name: "Trupti Kularkar"
+name: "Trupti Kularkar"
+email: "kularkartrupti@gmail.com"
+phone: "+91 9834055766"
+location: "Pune, Maharashtra, India"
+linkedin_url: "https://linkedin.com/in/trupti-kularkar"
+github_url: "https://github.com/trupti-kularkar"
+summary: "AI Data Engineer with expertise in building scalable ETL/ELT pipelines, BigQuery data platforms, Airflow orchestration, and LLM-powered systems on Google Cloud Platform."
+primary_career_direction: "Build a career at the intersection of AI/GenAI and Data Engineering."
+years_of_experience: 1.9
+current_experience_years: "1.9+"
+current_role: "Programmer Analyst"
+current_company: "Cognizant Technology Solutions"
+current_location: "Pune, Maharashtra, India"
+target_roles:
+  - "AI Data Engineer"
+  - "Data Engineer"
+  - "GenAI Engineer"
+  - "AI Engineer"
+  - "GCP Data Engineer"
+  - "GCP Data Engineer / Cloud Data Engineer"
+certifications:
+  - "Google Cloud Certified Associate Data Practitioner"
+  - "Discover Data Analysis Badge by Microsoft"
+education:
+  - degree: "B.Tech (Artificial Intelligence)"
+    institution: "G. H. Raisoni College of Engineering, Nagpur"
+    graduation_year: 2024
+    honors: "CGPA 8.83"
+    cgpa: 8.83
+candidate:
+  name: "Trupti Kularkar"
+  current_experience_years: "1.9+"
+  current_role: "Programmer Analyst"
+  current_company: "Cognizant Technology Solutions"
+  current_location: "Pune, Maharashtra, India"
+  primary_career_direction: "Build a career at the intersection of AI/GenAI and Data Engineering."
+  certifications:
+    - "Google Cloud Certified Associate Data Practitioner"
+    - "Discover Data Analysis Badge by Microsoft"
+  education:
+    degree: "B.Tech (Artificial Intelligence)"
+    institution: "G. H. Raisoni College of Engineering, Nagpur"
+    graduation_year: 2024
+    cgpa: 8.83
+  target_roles:
+    - "AI Data Engineer"
+    - "Data Engineer"
+    - "GenAI Engineer"
+    - "AI Engineer"
+    - "GCP Data Engineer"

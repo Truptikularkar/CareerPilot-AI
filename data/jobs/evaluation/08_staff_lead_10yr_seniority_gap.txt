@@ -1,0 +1,18 @@
+Job Title: Staff Data Architect & Technical Lead
+Company: MegaCorp Global Systems
+Location: Mumbai / Pune
+Experience Required: 8-10+ years
+
+Job Description:
+We are seeking a seasoned Staff Data Architect to lead enterprise-wide data strategy, cross-organization governance, and executive technical roadmaps across 50+ business units.
+
+Responsibilities:
+- Lead and mentor senior staff of 40+ data engineers and managers.
+- Architect multi-million dollar data lakehouse modernization programs.
+- Establish multi-region disaster recovery and compliance frameworks.
+- Negotiate enterprise vendor contracts and budget allocations.
+
+Required Qualifications (Must Have):
+- 8-10+ years of professional data architecture and executive engineering leadership experience.
+- Track record managing multi-tier engineering teams and multi-petabyte architectures.
+- Deep expertise across modern cloud data architectures.

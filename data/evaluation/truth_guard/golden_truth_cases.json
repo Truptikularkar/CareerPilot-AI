@@ -1,0 +1,98 @@
+[
+  {
+    "case_id": "tg_01_supported_tech",
+    "description": "Supported production technology BigQuery and Airflow",
+    "claim_text": "Built automated ETL pipelines in Google BigQuery and Apache Airflow.",
+    "claim_type": "TECHNOLOGY",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_02_unsupported_tech",
+    "description": "Unsupported production technology AWS Glue in production",
+    "claim_text": "Lead AWS data engineer managing AWS Glue in production.",
+    "claim_type": "TECHNOLOGY",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  },
+  {
+    "case_id": "tg_03_verified_metric",
+    "description": "Verified 25% query cost reduction metric",
+    "claim_text": "Optimized analytical BigQuery SQL queries, cutting cloud processing costs by ~25%.",
+    "claim_type": "METRIC",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_04_inflated_metric",
+    "description": "Inflated metric claiming 80% query cost reduction instead of 25%",
+    "claim_text": "Optimized BigQuery analytical SQL queries, cutting cloud processing costs by 80%.",
+    "claim_type": "METRIC",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  },
+  {
+    "case_id": "tg_05_project_boundary_violation",
+    "description": "Personal RAG project presented under client employment experience",
+    "claim_text": "Built production RAG platform for client serving enterprise users.",
+    "claim_type": "PROJECT_BOUNDARY",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  },
+  {
+    "case_id": "tg_06_correct_project_boundary",
+    "description": "Personal RAG project presented in projects section",
+    "claim_text": "Engineered a modular hybrid retrieval system combining dense FAISS search and BM25.",
+    "claim_type": "PROJECT_BOUNDARY",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_07_transferable_cloud_skill",
+    "description": "GCP BigQuery candidate discussing AWS Redshift conceptually in interview",
+    "claim_text": "While my production experience is on BigQuery, columnar storage and partitioning concepts apply to Redshift.",
+    "claim_type": "TRANSFERABLE_SKILL",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_08_inflated_seniority",
+    "description": "Candidate claiming 5+ years experience instead of verified 1.9+ years",
+    "claim_text": "Data engineer with 5+ years of professional experience.",
+    "claim_type": "SENIORITY",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  },
+  {
+    "case_id": "tg_09_supported_throughput_metric",
+    "description": "Verified 500k+ daily records ingestion throughput",
+    "claim_text": "Scaled batch ingestion pipelines processing 500k+ daily event records with high reliability.",
+    "claim_type": "METRIC",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_10_unsupported_kubernetes",
+    "description": "Claiming unverified Kubernetes production cluster management",
+    "claim_text": "Managed Kubernetes cluster management in production environments.",
+    "claim_type": "TECHNOLOGY",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  },
+  {
+    "case_id": "tg_11_supported_efficiency_metric",
+    "description": "Verified ~35% incident reduction metric",
+    "claim_text": "Implemented data quality validation frameworks reducing production pipeline incidents by ~35%.",
+    "claim_type": "METRIC",
+    "expected_verdict": "PASS",
+    "is_hallucination": false
+  },
+  {
+    "case_id": "tg_12_unsupported_spark_streaming",
+    "description": "Claiming direct enterprise production tenure on Spark production streaming",
+    "claim_text": "Architected Spark streaming in production across distributed nodes.",
+    "claim_type": "TECHNOLOGY",
+    "expected_verdict": "BLOCK",
+    "is_hallucination": true
+  }
+]

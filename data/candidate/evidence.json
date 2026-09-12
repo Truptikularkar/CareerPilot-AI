@@ -1,0 +1,117 @@
+{
+  "policy": {
+    "source_of_truth": [
+      "candidate/master_resume.pdf",
+      "candidate/experience.md",
+      "candidate/projects.md",
+      "candidate/skills.md",
+      "candidate/achievements.md",
+      "candidate/preferences.yaml"
+    ],
+    "unsupported_claim_action": "BLOCK",
+    "partially_supported_action": "FLAG_AND_REQUIRE_APPROVAL",
+    "supported_action": "ALLOW"
+  },
+  "evidence": [
+    {
+      "id": "E001",
+      "claim": "Python professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E002",
+      "claim": "SQL professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E003",
+      "claim": "GCP professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E004",
+      "claim": "BigQuery professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E005",
+      "claim": "Airflow professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E006",
+      "claim": "ETL/data engineering professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E007",
+      "claim": "Data quality engineering experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E008",
+      "claim": "LLM/GenAI professional experience",
+      "status": "SUPPORTED",
+      "source": "experience.md",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E009",
+      "claim": "RAG experience",
+      "status": "SUPPORTED",
+      "source": "projects.md",
+      "evidence_type": "personal_project",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E010",
+      "claim": "Hybrid retrieval using FAISS + BM25 + RRF",
+      "status": "SUPPORTED",
+      "source": "projects.md",
+      "evidence_type": "personal_project",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E011",
+      "claim": "AWS production experience",
+      "status": "NOT_SUPPORTED",
+      "source": "skills.md",
+      "allowed_for_resume": false
+    },
+    {
+      "id": "E012",
+      "claim": "Kubernetes production experience",
+      "status": "NOT_SUPPORTED",
+      "source": "skills.md",
+      "allowed_for_resume": false
+    },
+    {
+      "id": "E013",
+      "claim": "Spark production experience",
+      "status": "NOT_SUPPORTED",
+      "source": "skills.md",
+      "allowed_for_resume": false
+    },
+    {
+      "id": "E014",
+      "claim": "LangChain/LangGraph client production experience",
+      "status": "NOT_SUPPORTED",
+      "source": "skills.md",
+      "allowed_for_resume": false
+    }
+  ]
+}

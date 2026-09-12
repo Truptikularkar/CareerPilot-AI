@@ -1,0 +1,18 @@
+[
+  {
+    "case_id": "res_eval_01",
+    "strategy": "AI_DATA_ENGINEER",
+    "target_role": "Senior AI Data Platform Engineer",
+    "expected_sections": ["Summary", "Experience", "Projects", "Skills", "Education"],
+    "min_verified_bullets": 5,
+    "max_allowed_hallucinations": 0
+  },
+  {
+    "case_id": "res_eval_02",
+    "strategy": "DATA_ENGINEER",
+    "target_role": "Senior GCP Data Engineer",
+    "expected_sections": ["Summary", "Experience", "Projects", "Skills", "Education"],
+    "min_verified_bullets": 5,
+    "max_allowed_hallucinations": 0
+  }
+]

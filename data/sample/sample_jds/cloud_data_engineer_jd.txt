@@ -1,0 +1,24 @@
+Job Title: GCP Cloud Data & AI Engineer
+Company: FinScale Cloud Solutions
+Location: Austin, TX / Remote
+Experience Level: Senior (5+ years)
+
+Job Summary:
+FinScale is accelerating cloud data transformations for tier-1 financial institutions. We need a Senior GCP Data & AI Engineer to build reliable, compliant data lakes, Lakehouses, and GenAI-ready data architectures.
+
+Responsibilities:
+- Build automated data lakehouse pipelines on GCP leveraging BigQuery, Dataproc (Spark), and Vertex AI.
+- Design real-time streaming architectures using Cloud Pub/Sub, Cloud Functions, and BigQuery.
+- Ensure rigorous data governance, data lineage, and encryption compliance for financial workloads.
+- Integrate automated CI/CD deployment workflows for data pipelines and machine learning microservices.
+
+Requirements (Must Have):
+- 5+ years of software/data engineering with Python and advanced SQL.
+- Deep expertise with GCP ecosystem: BigQuery, Cloud Storage, Dataproc, and IAM.
+- Experience building production pipelines with Apache Airflow or Google Cloud Composer.
+- Experience with Docker, Kubernetes, and automated testing frameworks.
+
+Preferred (Nice to Have):
+- GCP Professional Data Engineer Certification.
+- Experience with Vertex AI and LLM embeddings.
+- Experience with Terraform or Infrastructure as Code.

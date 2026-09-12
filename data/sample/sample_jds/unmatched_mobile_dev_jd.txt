@@ -1,0 +1,23 @@
+Job Title: Senior iOS Application Engineer
+Company: MobileFirst Apps
+Location: New York, NY
+Experience Level: Senior (5+ years)
+
+Job Summary:
+MobileFirst is seeking an expert iOS Engineer to build ultra-responsive consumer iOS mobile applications using Swift and SwiftUI.
+
+Responsibilities:
+- Build modern, high-performance iOS apps using Swift, SwiftUI, and Combine.
+- Implement complex offline-first data synchronization with CoreData and SwiftData.
+- Integrate AVFoundation, CoreAnimation, and interactive custom mobile gestures.
+- Publish and manage app submissions and certificates on Apple App Store Connect.
+
+Requirements (Must Have):
+- 5+ years of dedicated iOS native development using Swift and Xcode.
+- Deep mastery of SwiftUI, UIKit, Combine, and Apple HIG guidelines.
+- Solid experience with CoreData / SwiftData and iOS memory management (ARC).
+- Experience with Unit/UI testing with XCTest.
+
+Preferred:
+- Published apps on the App Store with 100k+ downloads.
+- Experience with Metal or CoreML.
