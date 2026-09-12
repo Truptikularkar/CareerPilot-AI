@@ -15,8 +15,8 @@ class ResumeHeader(BaseModel):
     email: Optional[str] = "kularkartrupti123@gmail.com"
     phone: Optional[str] = "+91 9834055766"
     location: Optional[str] = "Pune, Maharashtra, India"
-    linkedin_url: Optional[str] = "https://linkedin.com/in/trupti-kularkar"
-    github_url: Optional[str] = "https://github.com/trupti-kularkar"
+    linkedin_url: Optional[str] = "https://www.linkedin.com/in/trupti-kularkar-579062210/"
+    github_url: Optional[str] = "https://github.com/Truptikularkar"
     portfolio_url: Optional[str] = None
 
 

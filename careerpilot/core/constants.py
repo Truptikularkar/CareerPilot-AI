@@ -375,6 +375,7 @@ class QuestionCategory(str, Enum):
     EXPERIENCE_GAP = "EXPERIENCE_GAP"
     FOLLOW_UP = "FOLLOW_UP"
     CANDIDATE_QUESTIONS = "CANDIDATE_QUESTIONS"
+    CODING_CHALLENGE = "CODING_CHALLENGE"
 
 
 class QuestionPriority(str, Enum):

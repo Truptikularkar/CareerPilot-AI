@@ -156,6 +156,30 @@ class InterviewReadinessScore(BaseModel):
         return self.overall_readiness
 
 
+class CodingChallenge(BaseModel):
+    """Hands-on coding, SQL, or algorithmic challenge for technical interviews."""
+    challenge_id: str
+    title: str
+    category: str = "PYTHON"  # PYTHON, SQL, PYSPARK, ALGORITHMS
+    difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
+    problem_statement: str
+    input_format: str = ""
+    output_format: str = ""
+    example_input: str = ""
+    example_output: str = ""
+    constraints: List[str] = Field(default_factory=list)
+    starter_code: str = ""
+    solution_code: str = ""
+    explanation: str = ""
+    time_complexity: str = ""
+    space_complexity: str = ""
+    interviewer_focus: str = ""
+
+    @property
+    def language(self) -> str:
+        return self.category
+
+
 class InterviewPlan(BaseModel):
     """Complete Interview Preparation Package for a specific job description."""
     prep_id: str
@@ -167,6 +191,7 @@ class InterviewPlan(BaseModel):
     answers: List[InterviewAnswer] = Field(default_factory=list)
     star_answers: List[STARAnswer] = Field(default_factory=list)
     system_designs: List[SystemDesignScenario] = Field(default_factory=list)
+    coding_challenges: List[CodingChallenge] = Field(default_factory=list)
     roadmap: PreparationRoadmap
     readiness_score: InterviewReadinessScore
     truth_report: Optional[Dict[str, Any]] = None

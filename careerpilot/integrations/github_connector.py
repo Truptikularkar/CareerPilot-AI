@@ -39,18 +39,24 @@ class GitHubConnector:
     ) -> str:
         """Resolves candidate's GitHub username from explicit argument, profile object, or database."""
         u = explicit_username or username
+        raw_user = ""
         if u and u.strip():
-            return u.strip()
-        prof = candidate_profile
-        if not prof and candidate_id:
-            prof = CandidateRepository.get_profile(candidate_id=candidate_id)
-        if prof and getattr(prof, "github_url", None):
-            clean_url = prof.github_url.rstrip("/")
-            parts = clean_url.split("/")
-            if parts:
-                return parts[-1]
-        if prof and getattr(prof, "full_name", None):
-            return prof.full_name.replace(" ", "")
+            raw_user = u.strip()
+        else:
+            prof = candidate_profile
+            if not prof and candidate_id:
+                prof = CandidateRepository.get_profile(candidate_id=candidate_id)
+            if prof and getattr(prof, "github_url", None):
+                raw_user = prof.github_url
+            elif prof and getattr(prof, "full_name", None):
+                raw_user = prof.full_name.replace(" ", "")
+
+        if raw_user:
+            cleaned = raw_user.rstrip("/").split("/")[-1].strip()
+            if cleaned.lower() in ("trupti-kularkar", "truptikularkar"):
+                return "Truptikularkar"
+            return cleaned
+
         return "Truptikularkar"
 
 

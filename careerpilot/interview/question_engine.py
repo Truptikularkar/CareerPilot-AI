@@ -29,6 +29,14 @@ class QuestionEngine:
         seed: InterviewReadinessSeed,
         quotas: Dict[QuestionCategory, int],
     ) -> List[InterviewQuestion]:
+        try:
+            from careerpilot.interview.gemini_question_generator import GeminiQuestionGenerator
+            pack = GeminiQuestionGenerator.generate_full_interview_pack(analysis, resume, seed)
+            if pack and pack.get("questions"):
+                return pack["questions"]
+        except Exception as e:
+            logger.warning("Could not generate questions via Gemini generator: %s. Using default logic.", e)
+
         questions: List[InterviewQuestion] = []
 
         # -------------------------------------------------------------

@@ -622,25 +622,32 @@ with tab_external:
         st.markdown("Connects to public repositories via official GitHub REST API with SSL certificate validation.")
         st.info("💡 All ingested repositories are classified as `PERSONAL_PROJECT` candidate evidence upon user approval.")
 
-        gh_url = profile.github_url or ""
-        gh_user = gh_url.rstrip("/").split("/")[-1] if gh_url else ""
+        gh_url = profile.github_url or "https://github.com/Truptikularkar"
+        default_gh_user = gh_url.rstrip("/").split("/")[-1] if gh_url else "Truptikularkar"
+        if default_gh_user.lower() == "trupti-kularkar":
+            default_gh_user = "Truptikularkar"
 
         c_gh1, c_gh2 = st.columns([2, 1])
         with c_gh1:
-            if gh_url:
-                st.markdown(f"**Target Profile:** [{gh_url}]({gh_url})")
-            else:
-                gh_user = st.text_input("Enter GitHub Username to Sync:", placeholder="e.g. your-github-username")
+            gh_user_input = st.text_input(
+                "GitHub Username or Profile URL:",
+                value=default_gh_user,
+                help="Enter your GitHub username or profile URL to sync public repositories.",
+            ).strip()
+            resolved_gh = gh_user_input.rstrip("/").split("/")[-1] if gh_user_input else default_gh_user
+            st.caption(f"🌐 Target Profile: [https://github.com/{resolved_gh}](https://github.com/{resolved_gh})")
         with c_gh2:
-            sync_gh_btn = st.button("🔄 Sync GitHub Repositories", type="primary", use_container_width=True, disabled=not bool(gh_user))
+            st.write("")
+            st.write("")
+            sync_gh_btn = st.button("🔄 Sync GitHub Repositories", type="primary", use_container_width=True, disabled=not bool(gh_user_input))
 
-        if sync_gh_btn and gh_user:
-            with st.spinner("Fetching public repositories from GitHub API..."):
+        if sync_gh_btn and gh_user_input:
+            with st.spinner(f"Fetching public repositories from GitHub API for '{resolved_gh}'..."):
                 from careerpilot.integrations.github_connector import GitHubConnector
-                gh_result = GitHubConnector.sync_github_profile(gh_user)
+                gh_result = GitHubConnector.sync_github_profile(resolved_gh)
                 if gh_result["status"] == "SUCCESS":
                     st.session_state["github_synced_repos"] = gh_result["repos"]
-                    st.success(f"✓ Successfully fetched {gh_result['repos_count']} repositories from GitHub!")
+                    st.success(f"✓ Successfully fetched {gh_result['repos_count']} public repositories from GitHub for user '{resolved_gh}'!")
                 else:
                     st.error(f"GitHub Sync Failed: {gh_result.get('error')}")
 
