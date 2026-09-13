@@ -262,5 +262,5 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for full instructions on deploying to **Strea
 ---
 
 ## Author
-**CareerPilot AI Engineering Team**  
-*Engineered with Python, LangGraph, ChromaDB, and Streamlit.*
+**Trupti Kularkar**  
+*Engineered with Python, LangGraph, RAG, ChromaDB, and Streamlit.*
