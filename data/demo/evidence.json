@@ -112,6 +112,30 @@
       "status": "NOT_SUPPORTED",
       "source": "skills.md",
       "allowed_for_resume": false
+    },
+    {
+      "id": "E015",
+      "claim": "Multi-agent orchestration and LangGraph cyclic state machines",
+      "status": "SUPPORTED",
+      "source": "projects.md",
+      "evidence_type": "personal_project",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E016",
+      "claim": "Production LLM application deployment with Google Gemini API & Streamlit Cloud",
+      "status": "SUPPORTED",
+      "source": "projects.md",
+      "evidence_type": "personal_project",
+      "allowed_for_resume": true
+    },
+    {
+      "id": "E017",
+      "claim": "Vector search and hybrid RAG implementation with ChromaDB",
+      "status": "SUPPORTED",
+      "source": "projects.md",
+      "evidence_type": "personal_project",
+      "allowed_for_resume": true
     }
   ]
 }

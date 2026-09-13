@@ -93,13 +93,11 @@
   - Reciprocal Rank Fusion
 - Use in resume: Yes, as project experience
 
-## LangChain / LangGraph
-- Current profile status:
-  - CareerPilot project is being built using LangChain/LangGraph
-  - Do not represent this as professional/client production experience unless separately verified
-- Resume treatment:
-  - May be listed as personal/project experience after implementation is complete
-  - Must not be represented as client production experience without evidence
+## LangChain / LangGraph / Multi-Agent Systems
+- Evidence: Project experience (CareerPilot AI)
+- Status: Completed and deployed on Streamlit Cloud
+- Resume treatment: Listed as technical project / open-source experience
+- Technologies: LangGraph cyclic graphs, state persistence, conditional routing, ChromaDB vector RAG, Google Gemini API
 
 ## AWS
 - Professional production experience: No

@@ -52,3 +52,14 @@ Verified evidence:
 - Enabled zero-code onboarding of new validation workflows.
 - Reduced setup time from days to under 30 minutes.
 - Integrated Microsoft Teams alerts through Power Automate REST API.
+
+## 5. CareerPilot AI — Multi-Agent Autonomous Career Copilot & RAG Job Platform
+**Technologies:** Python, LangGraph, Google Gemini API (gemini-3.6-flash), ChromaDB, Streamlit Cloud, SQLite, GitHub API, SQL, Pydantic
+
+Verified evidence:
+- Architected and deployed an end-to-end multi-agent AI system live on Streamlit Cloud using LangGraph cyclic state machines for autonomous job description analysis, resume tailoring, and interview preparation.
+- Built a hybrid RAG retrieval pipeline with ChromaDB vector embeddings and BM25 sparse search, implementing strict ground-truth verification that prevents LLM hallucinations by cross-checking candidate claims against verified experience.
+- Integrated Google Gemini 3.6-flash LLM to generate role-specific technical questionnaires across 3 difficulty tiers (Easy/Medium/Hard) and 4-6 hands-on coding & SQL challenges with complete executable solutions and complexity analysis.
+- Designed a 9-dimension deterministic ATS match-scoring algorithm that parses requirements into Must-Have vs. Nice-to-Have skills, generating explainable recommendations (Apply, Review, Skip).
+- Integrated GitHub REST API to automatically fetch, verify, and index public repositories and technical telemetry directly into candidate evidence stores.
+- Built an interactive Streamlit UI featuring dynamic candidate profile editing, on-demand Gemini AI re-analysis, and complete Markdown interview guide generation.
