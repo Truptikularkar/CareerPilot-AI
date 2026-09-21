@@ -25,7 +25,7 @@ class LinkedInConnector:
     @classmethod
     def resolve_profile_url(
         cls,
-        candidate_id: str = "trupti_kularkar",
+        candidate_id: Optional[str] = None,
         explicit_url: Optional[str] = None,
     ) -> str:
         """Resolves candidate's LinkedIn profile URL from explicit URL or database."""
@@ -34,21 +34,25 @@ class LinkedInConnector:
             if url.startswith("http"):
                 return url
             return f"https://www.linkedin.com/in/{url.lstrip('/')}"
-        db_record = ExternalProfileRepository.get_profile("LINKEDIN", candidate_id=candidate_id)
+        cid = candidate_id or settings.active_candidate_id
+        db_record = ExternalProfileRepository.get_profile("LINKEDIN", candidate_id=cid)
         if db_record and db_record.profile_url:
             return db_record.profile_url
-        profile = CandidateRepository.get_profile(candidate_id=candidate_id)
+        profile = CandidateRepository.get_profile(candidate_id=cid)
         if profile and profile.linkedin_url:
             return profile.linkedin_url
-        return "https://www.linkedin.com/in/trupti-kularkar-579062210/"
-
+        if cid in ("trupti_kularkar", "cand_verified"):
+            return "https://www.linkedin.com/in/trupti-kularkar-579062210/"
+        return ""
 
     @classmethod
-    def get_status(cls, candidate_id: str = "trupti_kularkar") -> Dict[str, Any]:
+    def get_status(cls, candidate_id: Optional[str] = None) -> Dict[str, Any]:
         """Returns the LinkedIn connection status and field limitations."""
-        db_record = ExternalProfileRepository.get_profile("LINKEDIN", candidate_id=candidate_id)
+        cid = candidate_id or settings.active_candidate_id
+        db_record = ExternalProfileRepository.get_profile("LINKEDIN", candidate_id=cid)
         is_connected = db_record.is_connected if db_record else False
-        profile_url = cls.resolve_profile_url(candidate_id=candidate_id)
+        profile_url = cls.resolve_profile_url(candidate_id=cid)
+
 
         return {
             "platform": "LINKEDIN",

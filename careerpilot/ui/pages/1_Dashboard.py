@@ -44,8 +44,9 @@ st.markdown("---")
 
 # 2. Career Intelligence & Funnel Analytics
 st.subheader("🚀 Career Intelligence & Pipeline Insights")
-insights = AnalyticsRepository.get_career_insights()
+insights = AnalyticsRepository.get_career_insights(candidate_id=settings.active_candidate_id)
 ci1, ci2, ci3, ci4 = st.columns(4)
+
 with ci1:
     st.metric("Interview Conversion Rate", insights.get("interview_conversion_rate", "0.0%"))
 with ci2:
@@ -92,20 +93,19 @@ from careerpilot.ui.utils.formatters import format_date, format_datetime
 
 with col_left:
     st.subheader("💼 Recent Analyzed Jobs")
-    jobs = JobRepository.list_jobs()
-    if jobs:
+    if apps:
         job_data = []
-        for j in jobs[:6]:
+        for a in apps[:6]:
             job_data.append({
-                "Company": j.company_name or "N/A",
-                "Job Title": j.job_title or "N/A",
-                "Role Category": j.extracted_role,
-                "Seniority": j.estimated_seniority,
-                "Date": format_date(j.created_at),
+                "Company": a.company or "N/A",
+                "Job Title": a.job_title or "N/A",
+                "Location": a.job_location or "N/A",
+                "Fit Score": f"{a.fit_score:.1f}%",
+                "Status": a.application_status.value if hasattr(a.application_status, "value") else str(a.application_status),
             })
         st.dataframe(pd.DataFrame(job_data), use_container_width=True, hide_index=True)
     else:
-        st.write("No jobs parsed yet.")
+        st.write("No jobs analyzed yet. Go to **Analyze Job** to get started.")
 
 with col_right:
     st.subheader("🎯 Preparation Weaknesses & Study Focus")
@@ -118,7 +118,8 @@ with col_right:
 
     st.markdown("---")
     st.subheader("🎙️ Recent Mock Interview Sessions")
-    mock_sessions = MockSessionRepository.list_all_sessions()
+    mock_sessions = MockSessionRepository.list_all_sessions(candidate_id=settings.active_candidate_id)
+
     if mock_sessions:
         m_data = []
         for m in mock_sessions[:5]:

@@ -458,14 +458,15 @@ class CandidateService:
 
     @classmethod
     def rebuild_candidate_rag(cls) -> int:
-        """Performs a clean rebuild of Candidate RAG store exclusively from authoritative SQLite data."""
-        store = CandidateStore()
-        store.clear()
+        """Performs a clean rebuild of Candidate RAG store exclusively for the active candidate from authoritative SQLite data."""
         profile = cls.get_active_profile()
+        store = CandidateStore()
+        store.delete_candidate_chunks(profile.id)
         count = cls.sync_profile_to_rag(profile)
         cls._last_rag_sync_time = datetime.now(timezone.utc)
-        logger.info("Rebuilt Candidate RAG collection with %d total chunks from SQLite.", count)
+        logger.info("Rebuilt Candidate RAG collection with %d total chunks from SQLite for candidate '%s'.", count, profile.id)
         return count
+
 
     @classmethod
     def get_rag_sync_status(cls) -> Dict[str, Any]:
@@ -535,15 +536,16 @@ class CandidateService:
             "github": {
                 "status": "Connected" if (gh and gh.is_connected) else "Not Connected",
                 "is_connected": bool(gh and gh.is_connected),
-                "url": profile.github_url or (gh.profile_url if gh else "https://github.com/Truptikularkar"),
+                "url": profile.github_url or (gh.profile_url if gh else ""),
                 "last_synced": gh.last_synced_at.strftime("%Y-%m-%d %H:%M") if (gh and gh.last_synced_at) else "Never",
             },
             "linkedin": {
                 "status": "Connected" if (li and li.is_connected) else "Not Connected (OAuth required / Manual Export Available)",
                 "is_connected": bool(li and li.is_connected),
-                "url": profile.linkedin_url or (li.profile_url if li else "https://www.linkedin.com/in/trupti-kularkar-579062210/"),
+                "url": profile.linkedin_url or (li.profile_url if li else ""),
                 "last_synced": li.last_synced_at.strftime("%Y-%m-%d %H:%M") if (li and li.last_synced_at) else "Never",
             },
+
             "naukri": {
                 "status": "Manual Import / Connector Unavailable (Enterprise API Required)",
                 "is_connected": bool(naukri and naukri.is_connected),

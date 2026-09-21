@@ -554,8 +554,9 @@ class ResumeRepository:
     ) -> ResumeVersionDB:
         if version is None:
             strat = tailoring_strategy or strategy_type or "STANDARD"
-            cid = candidate_id or "trupti_kularkar"
+            cid = candidate_id or settings.active_candidate_id
             ver_id = f"res_{uuid.uuid4().hex[:8]}"
+
             version = ResumeVersionDB(
                 id=ver_id,
                 job_id=job_id or "job_default",
@@ -643,9 +644,13 @@ class MockSessionRepository:
     """Repository for querying Mock Interview sessions."""
 
     @classmethod
-    def list_all_sessions(cls) -> List[MockSessionDB]:
+    def list_all_sessions(cls, candidate_id: Optional[str] = None) -> List[MockSessionDB]:
         with get_db() as db:
-            return db.query(MockSessionDB).order_by(desc(MockSessionDB.created_at)).all()
+            query = db.query(MockSessionDB)
+            cid = candidate_id or settings.active_candidate_id
+            if cid and cid != "ALL":
+                query = query.filter(MockSessionDB.candidate_id == cid)
+            return query.order_by(desc(MockSessionDB.created_at)).all()
 
     @classmethod
     def list_sessions_for_job(cls, job_id: str) -> List[MockSessionDB]:
@@ -660,11 +665,12 @@ class AnalyticsRepository:
     def get_dashboard_metrics(cls, candidate_id: Optional[str] = None) -> DashboardMetrics:
         cid = candidate_id or settings.active_candidate_id
         with get_db() as db:
-            total_jobs = db.query(JobDescriptionDB).count()
             apps_q = db.query(ApplicationDB)
             if cid and cid != "ALL":
                 apps_q = apps_q.filter(ApplicationDB.candidate_id == cid)
             apps = apps_q.all()
+            total_jobs = len(apps) if (cid and cid != "ALL") else db.query(JobDescriptionDB).count()
+
             preps_q = db.query(InterviewPrepDB)
             if cid and cid != "ALL":
                 preps_q = preps_q.filter(InterviewPrepDB.candidate_id == cid)
@@ -730,11 +736,16 @@ class AnalyticsRepository:
             )
 
     @classmethod
-    def get_skill_gaps_summary(cls) -> SkillGapSummary:
+    def get_skill_gaps_summary(cls, candidate_id: Optional[str] = None) -> SkillGapSummary:
+        cid = candidate_id or settings.active_candidate_id
         with get_db() as db:
-            analyses = db.query(JobAnalysisDB).all()
+            query = db.query(JobAnalysisDB)
+            if cid and cid != "ALL":
+                query = query.filter(JobAnalysisDB.candidate_id == cid)
+            analyses = query.all()
             missing_counts: Dict[str, int] = {}
             demanded_counts: Dict[str, int] = {}
+
 
             for a in analyses:
                 for skill in (a.missing_skills_json or []):

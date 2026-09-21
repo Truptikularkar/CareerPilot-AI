@@ -57,7 +57,11 @@ class GitHubConnector:
                 return "Truptikularkar"
             return cleaned
 
-        return "Truptikularkar"
+        cid = candidate_id or settings.active_candidate_id
+        if cid in ("trupti_kularkar", "cand_verified"):
+            return "Truptikularkar"
+        return ""
+
 
 
     @classmethod

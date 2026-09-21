@@ -67,33 +67,55 @@ class ResumeImportService:
         """
         lines = [line.strip() for line in raw_text.splitlines() if line.strip()]
 
-        # Detect potential skills
-        known_skill_keywords = [
+        # Detect potential skills using comprehensive taxonomy
+        from careerpilot.parsers.jd_parser import JobDescriptionParser
+        taxonomy_keywords = [item["name"] for item in JobDescriptionParser.SKILL_TAXONOMY_MAP.values() if isinstance(item, dict) and "name" in item]
+        known_skill_keywords = list(dict.fromkeys([
             "Python", "SQL", "BigQuery", "Apache Airflow", "Airflow", "GCP", "Google Cloud Platform",
             "Vertex AI", "Gemini", "FastAPI", "Docker", "Kubernetes", "Git", "ChromaDB", "FAISS",
             "LangGraph", "LangChain", "RAG", "Dataflow", "Pub/Sub", "Cloud Storage", "Cloud Functions",
             "dbt", "Spark", "PySpark", "Kafka", "PostgreSQL", "Snowflake", "Databricks", "Terraform",
             "AWS", "Redshift", "S3", "Glue", "Lambda", "Java", "C++", "TypeScript", "React", "Rust",
-        ]
+            "Machine Learning", "Deep Learning", "Generative AI", "REST API", "CI/CD",
+        ] + taxonomy_keywords))
 
 
         found_skills = []
         for kw in known_skill_keywords:
-            if re.search(rf"\b{re.escape(kw)}\b", raw_text, re.IGNORECASE):
+            if len(kw) >= 2 and re.search(rf"\b{re.escape(kw)}\b", raw_text, re.IGNORECASE):
                 found_skills.append(kw)
 
-        # Detect potential projects
+        # Detect potential projects dynamically from headers and text
         detected_projects = []
-        proj_headings = ["Local RAG", "AI AutoHeal", "Sales Data Validation", "Anomaly Detection", "CareerPilot"]
-        for ph in proj_headings:
-            if ph.lower() in raw_text.lower():
+        in_projects_section = False
+        for line in lines:
+            line_clean = line.strip()
+            if re.match(r"^(key\s+|personal\s+|academic\s+)?projects?(\s*\(.*\))?:?$", line_clean, re.IGNORECASE):
+                in_projects_section = True
+                continue
+            elif in_projects_section and re.match(r"^(professional\s+experience|work\s+experience|experience|employment|education|skills|certifications|achievements):?$", line_clean, re.IGNORECASE):
+                in_projects_section = False
+                continue
+
+            if in_projects_section:
+                # Capture project titles (e.g. "Smart Inventory System - Description" or standalone title lines)
+                if 3 < len(line_clean) < 65 and not line_clean.startswith(("-", "*", "•", "http", "www")):
+                    proj_name = re.split(r"[-–—:|]", line_clean)[0].strip().strip("*_#")
+                    if len(proj_name) > 3 and proj_name not in detected_projects and not proj_name.lower().startswith(("technolog", "tool", "stack")):
+                        detected_projects.append(proj_name)
+
+        # Also detect common landmark project phrases if present
+        landmark_projects = ["Local RAG", "AI AutoHeal", "Sales Data Validation", "Anomaly Detection", "CareerPilot"]
+        for ph in landmark_projects:
+            if ph.lower() in raw_text.lower() and ph not in detected_projects:
                 detected_projects.append(ph)
 
         return {
-            "skills": list(set(found_skills)),
+            "skills": list(dict.fromkeys(found_skills)),
             "detected_projects": detected_projects,
             "raw_text": raw_text,
         }
+
 
     @classmethod
     def compute_diff(

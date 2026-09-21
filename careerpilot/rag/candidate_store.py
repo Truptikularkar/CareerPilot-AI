@@ -54,6 +54,17 @@ class CandidateStore:
             logger.debug("Collection deletion exception (normal if non-existent): %s", e)
         self.collection = self._get_or_create_collection()
 
+    def delete_candidate_chunks(self, candidate_id: str) -> None:
+        """Safely deletes only chunks belonging to a specific candidate, preserving all other users."""
+        if not candidate_id:
+            return
+        try:
+            self.collection.delete(where={"candidate_id": candidate_id})
+            logger.info("Deleted evidence chunks for candidate '%s'", candidate_id)
+        except Exception as e:
+            logger.warning("Could not delete chunks for candidate '%s': %s", candidate_id, e)
+
+
     def parse_candidate_directory(self, candidate_dir: Path) -> List[Dict[str, Any]]:
         """
         Parses candidate source files into semantically structured chunks with metadata.

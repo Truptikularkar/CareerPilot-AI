@@ -86,7 +86,12 @@ def assemble_and_draft_node(state: ResumeGenerationState) -> Dict[str, Any]:
     certifications = BulletSelector.assemble_certifications(candidate=candidate)
 
     total_years = calculate_total_experience_years(candidate.experiences)
-    exp_years_str = format_experience_duration_string(total_years) if total_years > 0 else "1.9+ years"
+    if total_years > 0:
+        exp_years_str = format_experience_duration_string(total_years)
+    elif candidate.id in ("trupti_kularkar", "cand_verified"):
+        exp_years_str = "1.9+ years"
+    else:
+        exp_years_str = "Entry Level"
 
     cfg = StrategyEngine.STRATEGY_CONFIGS.get(strategy.strategy_type, StrategyEngine.STRATEGY_CONFIGS[ResumeStrategyType.AI_DATA_ENGINEER])
     summary_text = cfg["summary_template"]
@@ -99,15 +104,17 @@ def assemble_and_draft_node(state: ResumeGenerationState) -> Dict[str, Any]:
         experience_years_stated=exp_years_str,
     )
 
+    default_loc = "Pune, Maharashtra, India" if candidate.id in ("trupti_kularkar", "cand_verified") else "Remote / Flexible"
     header = ResumeHeader(
         full_name=candidate.full_name,
         email=candidate.email,
         phone=candidate.phone,
-        location=candidate.location or "Pune, Maharashtra, India",
+        location=candidate.location or default_loc,
         linkedin_url=candidate.linkedin_url,
         github_url=candidate.github_url,
         portfolio_url=candidate.portfolio_url,
     )
+
 
     draft = TailoredResume(
         job_id=analysis.job_id,

@@ -97,8 +97,9 @@ with tab_overview:
             full_name = st.text_input("Full Name*:", value=profile.full_name)
             email = st.text_input("Email Address:", value=profile.email or "")
             phone = st.text_input("Phone Number:", value=profile.phone or "")
-            location = st.text_input("Current Location:", value=profile.location or "Pune, Maharashtra, India")
+            location = st.text_input("Current Location:", value=profile.location or "", placeholder="e.g. Pune, Maharashtra, India or Remote")
         with o_c2:
+
             linkedin_url = st.text_input("LinkedIn Profile URL:", value=profile.linkedin_url or "")
             github_url = st.text_input("GitHub Profile URL:", value=profile.github_url or "")
             portfolio_url = st.text_input("Portfolio / Website URL:", value=profile.portfolio_url or "")
@@ -580,17 +581,19 @@ with tab_pref:
             target_roles = st.multiselect(
                 "Target Role Categories*:",
                 available_roles,
-                default=[r for r in curr_roles if r in available_roles] or ["AI_DATA_ENGINEER", "DATA_ENGINEER", "GENAI_ENGINEER"],
+                default=[r for r in curr_roles if r in available_roles],
+                placeholder="Select one or more target roles",
             )
             sen_options = [s.value for s in SeniorityLevel]
             curr_sen = profile.preferences.preferred_seniority.value if hasattr(profile.preferences.preferred_seniority, "value") else str(profile.preferences.preferred_seniority)
-            pref_sen = st.selectbox("Target Seniority Level:", sen_options, index=sen_options.index(curr_sen) if curr_sen in sen_options else 2)
+            pref_sen = st.selectbox("Target Seniority Level:", sen_options, index=sen_options.index(curr_sen) if curr_sen in sen_options else 0)
             pref_modes = st.multiselect("Work Mode Preferences:", ["Remote", "Hybrid", "On-site"], default=profile.preferences.work_modes or ["Remote", "Hybrid"])
 
         with p_c2:
-            pref_locs = st.text_input("Target Locations (comma-separated):", value=", ".join(profile.preferences.target_locations or ["Pune", "Nagpur", "Remote"]))
-            pref_comp = st.text_input("Target Compensation (Optional):", value=profile.preferences.min_desired_comp or "9-10 LPA")
-            pref_clouds = st.multiselect("Cloud Ecosystem Preferences:", ["GCP", "AWS", "Azure", "Multi-cloud"], default=profile.preferences.cloud_preferences or ["GCP", "AWS"])
+            pref_locs = st.text_input("Target Locations (comma-separated):", value=", ".join(profile.preferences.target_locations or []), placeholder="e.g. Pune, Bangalore, Remote")
+            pref_comp = st.text_input("Target Compensation (Optional):", value=profile.preferences.min_desired_comp or "", placeholder="e.g. 9-10 LPA")
+            pref_clouds = st.multiselect("Cloud Ecosystem Preferences:", ["GCP", "AWS", "Azure", "Multi-cloud"], default=profile.preferences.cloud_preferences or [])
+
 
         sub_pref = st.form_submit_button("💾 Save Career Preferences", use_container_width=True)
         if sub_pref:
@@ -620,21 +623,22 @@ with tab_external:
         st.markdown("Connects to public repositories via official GitHub REST API with SSL certificate validation.")
         st.info("💡 All ingested repositories are classified as `PERSONAL_PROJECT` candidate evidence upon user approval.")
 
-        gh_url = profile.github_url or "https://github.com/Truptikularkar"
-        default_gh_user = gh_url.rstrip("/").split("/")[-1] if gh_url else "Truptikularkar"
-        if default_gh_user.lower() == "trupti-kularkar":
-            default_gh_user = "Truptikularkar"
+        gh_url = profile.github_url or ""
+        default_gh_user = gh_url.rstrip("/").split("/")[-1] if gh_url else ""
 
         c_gh1, c_gh2 = st.columns([2, 1])
         with c_gh1:
             gh_user_input = st.text_input(
                 "GitHub Username or Profile URL:",
                 value=default_gh_user,
+                placeholder="e.g. your-github-username",
                 help="Enter your GitHub username or profile URL to sync public repositories.",
             ).strip()
-            resolved_gh = gh_user_input.rstrip("/").split("/")[-1] if gh_user_input else default_gh_user
-            st.caption(f"🌐 Target Profile: [https://github.com/{resolved_gh}](https://github.com/{resolved_gh})")
+            resolved_gh = gh_user_input.rstrip("/").split("/")[-1] if gh_user_input else ""
+            if resolved_gh:
+                st.caption(f"🌐 Target Profile: [https://github.com/{resolved_gh}](https://github.com/{resolved_gh})")
         with c_gh2:
+
             st.write("")
             st.write("")
             sync_gh_btn = st.button("🔄 Sync GitHub Repositories", type="primary", use_container_width=True, disabled=not bool(gh_user_input))
