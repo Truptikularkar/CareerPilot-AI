@@ -9,6 +9,7 @@ from typing import Dict, Any, List, Optional, Tuple
 from careerpilot.core.constants import (
     MatchStatus,
     RequirementImportance,
+    TaxonomyCategory,
     CloudTransferabilityStatus,
     DecisionRecommendation,
     RoleCategory,
@@ -67,6 +68,15 @@ class ExplanationService:
         for m in matches:
             skill = m.requirement.normalized_skill or m.requirement.skill_name or ""
             if not skill:
+                continue
+
+            # Exclude location strings, work mode, and marketing boilerplate from skill gap lists
+            skill_lower = skill.lower()
+            if (
+                any(w in skill_lower for w in ["location:", "location -", "work location:", "pune", "bangalore", "remote", "hybrid", "onsite"])
+                or any(w in skill_lower for w in ["change the world", "tell us about", "let us know", "join our team", "equal opportunity"])
+                or m.requirement.category == TaxonomyCategory.OTHER
+            ):
                 continue
 
             if m.match_status in (MatchStatus.MATCH, MatchStatus.PARTIAL):
@@ -209,18 +219,21 @@ class ExplanationService:
         else:  # SKIP
             reasons = []
             if explicit_req_years is not None and (explicit_req_years - cand_years) >= 2.0:
-                reasons.append(f"This role requires {explicit_req_years:.0f}+ years of experience, while your verified profile shows about {cand_years:.1f} years.")
+                reasons.append(f"This role mandates {explicit_req_years:.0f}+ years of experience (your verified profile shows {cand_years:.1f} years).")
             if missing_required:
-                reasons.append(f"Missing mandatory requirements: {', '.join(missing_required[:3])}.")
+                reasons.append(f"Missing mandatory technical requirements: {', '.join(missing_required[:3])}.")
             if cloud_is_mandatory and req_cloud.upper() == "AWS":
-                reasons.append("The role strictly requires AWS production experience, which is not present in your profile.")
+                reasons.append("The role strictly mandates enterprise AWS production experience.")
 
             if reasons:
                 decision_reason = " ".join(reasons)
             else:
-                decision_reason = f"Low fit score ({score:.1f}%). Key technical requirements differ substantially from your verified profile."
+                decision_reason = f"Low fit score ({score:.1f}%). Key technical requirements differ from your verified profile."
 
-            next_action = "Skip this role and focus on GCP / Data Engineering roles closer to your current experience level."
+            if matching_reqs and missing_required:
+                next_action = f"Focus on roles matching your verified skills in {', '.join(matching_reqs[:2])}, or consider upskilling in {', '.join(missing_required[:2])} before applying."
+            else:
+                next_action = "Explore roles aligned with your verified experience level and primary tech stack."
 
         # 8. Zero-Score Job Guarantee
         zero_score_explanation: Optional[Dict[str, Any]] = None

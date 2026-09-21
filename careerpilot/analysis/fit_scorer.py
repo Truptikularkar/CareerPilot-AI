@@ -1,8 +1,9 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from careerpilot.core.config import settings
 from careerpilot.core.constants import (
     MatchStatus,
     RequirementImportance,
+    TaxonomyCategory,
     CloudTransferabilityStatus,
     RoleCategory,
     SeniorityLevel,
@@ -14,6 +15,7 @@ from careerpilot.models.job import (
     RoleClassification,
     FitScoreBreakdown,
 )
+from careerpilot.models.candidate import CandidateProfile
 from careerpilot.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -33,6 +35,7 @@ class CandidateJobFitScorer:
         cloud_eval: CloudTransferability,
         preference_score: float,
         jd: JobDescription,
+        candidate_profile: Optional[CandidateProfile] = None,
     ) -> FitScoreBreakdown:
         # 1. Must-Have Technical Skills Score
         must_haves = [m for m in matches if m.requirement.importance == RequirementImportance.MUST_HAVE]
@@ -48,7 +51,9 @@ class CandidateJobFitScorer:
                 must_have_points += 55.0
             else:
                 must_have_points += 0.0
-                missing_must_have_count += 1
+                # Only technical/domain requirements count toward the heavy disqualifying gap penalty
+                if m.requirement.category not in (TaxonomyCategory.SOFT_SKILL, TaxonomyCategory.OTHER):
+                    missing_must_have_count += 1
 
         must_have_score = (must_have_points / len(must_haves)) if must_haves else 80.0
 
@@ -126,18 +131,27 @@ class CandidateJobFitScorer:
             evidence_strength_score = 80.0
 
         # 6. Location Preference Score
-        loc_str = (jd.location or "").lower()
+        loc_str = ((jd.location or "") + " " + jd.raw_text[:200]).lower()
         work_mode = (jd.work_mode or "").lower()
+
+        # Build candidate's preferred and current locations
+        candidate_locs = ["pune", "nagpur", "remote"]
+        if candidate_profile:
+            if candidate_profile.preferences and candidate_profile.preferences.target_locations:
+                candidate_locs.extend([l.lower() for l in candidate_profile.preferences.target_locations])
+            if candidate_profile.location:
+                candidate_locs.append(candidate_profile.location.lower())
+
         if "remote" in loc_str or "remote" in work_mode:
             location_score = 100.0
-        elif any(city in loc_str for city in ["bangalore", "bengaluru"]):
-            location_score = 100.0 if "onsite" not in work_mode else 90.0
-        elif any(city in loc_str for city in ["hyderabad", "pune", "mumbai", "delhi", "gurgaon", "noida"]):
-            location_score = 70.0
-        elif loc_str:
-            location_score = 45.0
-        else:
+        elif any(c in loc_str for c in candidate_locs if len(c) > 2):
+            location_score = 100.0
+        elif any(city in loc_str for city in ["pune", "nagpur", "bangalore", "bengaluru", "hyderabad", "mumbai", "delhi", "gurgaon", "noida"]):
             location_score = 85.0
+        elif loc_str.strip():
+            location_score = 65.0
+        else:
+            location_score = 90.0
 
         # 7. Company Preference Score
         comp_str = (jd.company_name or "").lower()

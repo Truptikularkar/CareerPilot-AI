@@ -67,7 +67,7 @@ class CareerPilotService:
         input_source: Union[str, Path],
         company_name: Optional[str] = None,
         job_title: Optional[str] = None,
-        job_location: Optional[str] = "Remote / Flexible",
+        job_location: Optional[str] = None,
         job_url: Optional[str] = None,
     ) -> Tuple[JobAnalysisResult, Application]:
         """
@@ -76,15 +76,26 @@ class CareerPilotService:
         """
         from careerpilot.graphs.job_analysis_graph import analyze_job as run_job_analysis
         from careerpilot.parsers.jd_parser import JobDescriptionParser
+        from careerpilot.services.candidate_service import CandidateService
 
-        logger.info("CareerPilotService: Executing job analysis for input: %s", str(input_source)[:60])
-        analysis: JobAnalysisResult = run_job_analysis(input_source)
+        active_cid = settings.active_candidate_id
+        active_profile = CandidateService.get_active_profile(candidate_id=active_cid)
+
+        logger.info("CareerPilotService: Executing job analysis for candidate '%s' on input: %s", active_cid, str(input_source)[:60])
+        analysis: JobAnalysisResult = run_job_analysis(
+            input_source=input_source,
+            candidate_profile=active_profile,
+            candidate_id=active_cid,
+            company_name=company_name,
+            job_title=job_title,
+            job_location=job_location,
+        )
 
         # Parse or retrieve structured JobDescription
         if isinstance(input_source, Path) or (isinstance(input_source, str) and (Path(input_source).exists() or input_source.endswith((".txt", ".md", ".pdf")))):
-            jd = JobDescriptionParser.parse_file(Path(input_source))
+            jd = JobDescriptionParser.parse_file(Path(input_source), company_name=company_name, job_title=job_title, location=job_location)
         else:
-            jd = JobDescriptionParser.parse_raw_text(str(input_source))
+            jd = JobDescriptionParser.parse_raw_text(str(input_source), company_name=company_name, job_title=job_title, location=job_location)
 
         # Override metadata if explicitly provided
         if company_name:
@@ -93,12 +104,11 @@ class CareerPilotService:
         if job_title:
             jd.job_title = job_title
             analysis.job_title = job_title
-        if job_location:
+        if job_location and job_location != "Remote / Flexible":
             jd.location = job_location
 
         # 1. Save Job and Analysis in DB
         jd.id = analysis.job_id
-        active_cid = settings.active_candidate_id
         JobRepository.save_job_description(jd)
         JobRepository.save_job_analysis(analysis, candidate_id=active_cid)
 

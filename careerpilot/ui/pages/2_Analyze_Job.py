@@ -48,7 +48,7 @@ with st.expander("📝 Provide Job Description", expanded=(st.session_state.curr
         
         c_loc, c_url = st.columns(2)
         with c_loc:
-            job_loc_in = st.text_input("Job Location (Optional)", placeholder="e.g. Bangalore / Remote", value="Remote / Flexible")
+            job_loc_in = st.text_input("Job Location (Optional)", placeholder="e.g. Pune, Remote (leave blank to auto-detect from JD)")
         with c_url:
             job_url_in = st.text_input("Job URL (Optional)", placeholder="https://careers.company.com/job/123")
             
@@ -120,7 +120,7 @@ with st.expander("📝 Provide Job Description", expanded=(st.session_state.curr
                     input_source=jd_text_in,
                     company_name=company_in or None,
                     job_title=job_title_in or None,
-                    job_location=job_loc_in or "Remote / Flexible",
+                    job_location=job_loc_in.strip() if job_loc_in and job_loc_in.strip() and job_loc_in.strip().lower() != "remote / flexible" else None,
                     job_url=job_url_in or ext_url or None,
                 )
                 progress.progress(1.0, text="Analysis Complete!")

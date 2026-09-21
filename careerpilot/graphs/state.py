@@ -34,6 +34,12 @@ class JobAnalysisState(TypedDict, total=False):
     """LangGraph state schema for Job Analysis and fit scoring workflow."""
     file_path: Optional[Union[str, Path]]
     raw_input: Optional[str]
+    company_name: Optional[str]
+    job_title: Optional[str]
+    job_location: Optional[str]
+    work_mode: Optional[str]
+    candidate_id: Optional[str]
+    candidate_profile: Optional[Any]
     job_description: Optional[Any]
     requirements: Optional[List[Any]]
     role_classification: Optional[Any]

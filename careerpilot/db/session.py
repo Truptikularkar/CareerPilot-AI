@@ -162,6 +162,16 @@ def init_db() -> None:
                 cand_verified.projects_json = [p.model_dump() for p in parsed_p.projects]
                 cand_verified.skills_json = [s.model_dump() for s in parsed_p.skills]
                 db.commit()
+            else:
+                # Ensure newly added canonical skills are merged if not already present
+                existing_skill_names = {
+                    (s.get("name", "") if isinstance(s, dict) else getattr(s, "name", "")).lower()
+                    for s in (cand_verified.skills_json or [])
+                }
+                skills_to_add = [s.model_dump() for s in parsed_p.skills if s.name.lower() not in existing_skill_names]
+                if skills_to_add:
+                    cand_verified.skills_json = list(cand_verified.skills_json or []) + skills_to_add
+                    db.commit()
 
 
 

@@ -1,10 +1,11 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from careerpilot.core.config import settings
 from careerpilot.core.constants import (
     DecisionRecommendation,
     RiskSeverity,
     MatchStatus,
     RequirementImportance,
+    TaxonomyCategory,
     CloudTransferabilityStatus,
     RoleCategory,
 )
@@ -19,6 +20,7 @@ from careerpilot.models.job import (
     RiskItem,
     JobAnalysisResult,
 )
+from careerpilot.models.candidate import CandidateProfile
 from careerpilot.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -41,6 +43,7 @@ class DecisionEngine:
         matches: List[RequirementMatch],
         fit_score: FitScoreBreakdown,
         risks: List[RiskItem],
+        candidate_profile: Optional[CandidateProfile] = None,
     ) -> JobAnalysisResult:
         # Extract strengths & gaps
         strengths = [
@@ -65,10 +68,12 @@ class DecisionEngine:
         critical_risks = [r for r in risks if r.severity == RiskSeverity.CRITICAL]
         high_risks = [r for r in risks if r.severity == RiskSeverity.HIGH]
 
-        # Count must-have gaps
+        # Count technical must-have gaps (safeguarding against soft skills or unparsed lines)
         must_have_gaps = [
             m for m in matches
-            if m.requirement.importance == RequirementImportance.MUST_HAVE and m.match_status == MatchStatus.GAP
+            if m.requirement.importance == RequirementImportance.MUST_HAVE
+            and m.match_status == MatchStatus.GAP
+            and m.requirement.category not in (TaxonomyCategory.SOFT_SKILL, TaxonomyCategory.OTHER)
         ]
 
         score = fit_score.total_weighted_score
@@ -130,6 +135,7 @@ class DecisionEngine:
             fit_score=fit_score,
             recommendation=recommendation,
             risks=risks,
+            candidate_profile=candidate_profile,
         )
 
         return JobAnalysisResult(
