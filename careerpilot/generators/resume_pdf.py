@@ -52,8 +52,8 @@ class PDFResumeExporter:
     def _build_story(
         cls,
         resume: TailoredResume,
-        margin_inch: float = 0.45,
-        base_font_size: float = 8.8,
+        margin_inch: float = 0.38,
+        base_font_size: float = 9.0,
         heading_size: float = 10.5,
     ) -> List:
         styles = getSampleStyleSheet()
@@ -66,7 +66,7 @@ class PDFResumeExporter:
             leading=18,
             alignment=TA_CENTER,
             textColor=HexColor("#0A2540"),
-            spaceAfter=2,
+            spaceAfter=2.5,
         )
 
         contact_style = ParagraphStyle(
@@ -261,14 +261,14 @@ class PDFResumeExporter:
         resume_to_render = resume.model_copy(deep=True)
 
         # Content Prioritization for early/mid-career:
-        # 1. Limit projects to top 3
-        if len(resume_to_render.projects) > 3:
-            resume_to_render.projects = resume_to_render.projects[:3]
+        # 1. Allow up to 4 projects to ensure full 1-page density
+        if len(resume_to_render.projects) > 4:
+            resume_to_render.projects = resume_to_render.projects[:4]
 
-        # 2. Clamp bullets per experience between 2 and 4
+        # 2. Allow up to 5 bullets per experience
         for exp in resume_to_render.experience:
-            if len(exp.bullets) > 4:
-                exp.bullets = exp.bullets[:4]
+            if len(exp.bullets) > 5:
+                exp.bullets = exp.bullets[:5]
 
         def render_doc(res_obj, m_inch, f_size, h_size):
             doc = SimpleDocTemplate(
@@ -285,8 +285,8 @@ class PDFResumeExporter:
             story = cls._build_story(res_obj, margin_inch=m_inch, base_font_size=f_size, heading_size=h_size)
             doc.build(story)
 
-        # Pass 1: Standard compact layout
-        render_doc(resume_to_render, 0.40, 8.8, 10.2)
+        # Pass 1: Standard layout for rich 1-page fill
+        render_doc(resume_to_render, 0.38, 9.0, 10.5)
         page_count = 1
 
         try:
@@ -297,20 +297,20 @@ class PDFResumeExporter:
             # Pass 2: Adaptive micro-compression if page_count > 1
             if page_count > 1 and enforce_one_page:
                 logger.info("PDF Pass 1 generated %d pages. Applying Pass 2 micro-compression...", page_count)
-                render_doc(resume_to_render, 0.34, 8.2, 9.6)
+                render_doc(resume_to_render, 0.34, 8.4, 9.8)
                 pdf_doc2 = pymupdf.open(str(path))
                 page_count = len(pdf_doc2)
                 pdf_doc2.close()
 
-            # Pass 3: Aggressive content pruning if still > 1 page
+            # Pass 3: Content pruning if still > 1 page
             if page_count > 1 and enforce_one_page:
                 logger.info("PDF Pass 2 generated %d pages. Applying Pass 3 aggressive pruning...", page_count)
-                if len(resume_to_render.projects) > 2:
-                    resume_to_render.projects = resume_to_render.projects[:2]
+                if len(resume_to_render.projects) > 3:
+                    resume_to_render.projects = resume_to_render.projects[:3]
                 for exp in resume_to_render.experience:
-                    if len(exp.bullets) > 3:
-                        exp.bullets = exp.bullets[:3]
-                render_doc(resume_to_render, 0.30, 7.8, 9.0)
+                    if len(exp.bullets) > 4:
+                        exp.bullets = exp.bullets[:4]
+                render_doc(resume_to_render, 0.30, 8.0, 9.2)
                 pdf_doc3 = pymupdf.open(str(path))
                 page_count = len(pdf_doc3)
                 pdf_doc3.close()

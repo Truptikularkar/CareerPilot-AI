@@ -124,6 +124,27 @@ class GeminiQuestionGenerator:
             "Always output strictly valid JSON matching the requested schema. Do not include markdown code blocks around the JSON."
         )
 
+        # Dynamically retrieve active candidate profile for grounding
+        from careerpilot.services.candidate_service import CandidateService
+        candidate = CandidateService.get_active_profile()
+
+        cand_name = candidate.full_name or "Trupti Kularkar"
+        curr_role = candidate.experiences[0].title if candidate.experiences else "Programmer Analyst"
+        curr_comp = candidate.experiences[0].company if candidate.experiences else "Cognizant Technology Solutions"
+        
+        all_skills = [s.name for s in candidate.skills if getattr(s, "evidence_status", "VERIFIED") == "VERIFIED"]
+        if not all_skills:
+            all_skills = ["Python", "SQL", "Google BigQuery", "Apache Airflow", "GCP", "Vertex AI", "Gemini API", "ChromaDB", "LangGraph"]
+
+        proj_summaries = []
+        for p in candidate.projects:
+            techs_str = ", ".join(p.technologies[:5])
+            metrics_str = f" [Metrics: {', '.join(p.metrics)}]" if getattr(p, "metrics", None) else ""
+            proj_summaries.append(f"  * {p.name} ({techs_str}): {p.description}{metrics_str}")
+        projs_text = "\n".join(proj_summaries) if proj_summaries else "  * Enterprise Data Quality, AI AutoHeal Agent, Local RAG, CareerPilot AI"
+
+        achieve_text = "; ".join([a.description for a in candidate.achievements]) if candidate.achievements else "Automated Airflow validation reducing manual effort by ~60%; BigQuery query optimization cutting compute costs by ~25%"
+
         prompt = f"""
 Analyze the target job description and candidate background, then generate a comprehensive interview preparation questionnaire.
 
@@ -135,10 +156,12 @@ MUST-HAVE REQUIREMENTS: {', '.join(must_haves[:8])}
 CORE RESPONSIBILITIES: {'; '.join(responsibilities)}
 
 CANDIDATE BACKGROUND:
-- Name: Trupti Kularkar
-- Current Role: Programmer Analyst at Cognizant Technology Solutions (1.9+ years experience)
-- Core Stack: Google Cloud Platform (GCP), BigQuery, Apache Airflow, Python, SQL, Cloud Storage, Pub/Sub, Vertex AI, Gemini API, RAG & Vector Databases (ChromaDB, FAISS).
-- Key Achievements: Automated Airflow validation reducing manual effort by ~60%; BigQuery query optimization cutting compute costs by ~25%; Autonomous self-healing Airflow log-parsing agent.
+- Name: {cand_name}
+- Current Role: {curr_role} at {curr_comp}
+- Verified Technical Skills: {', '.join(all_skills[:30])}
+- Authoritative Projects:
+{projs_text}
+- Verified Achievements: {achieve_text}
 
 GENERATE A JSON OBJECT WITH THE FOLLOWING FOUR KEYS:
 1. "questions": List of 12-16 technical, scenario, and screening interview questions:

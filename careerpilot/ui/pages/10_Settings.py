@@ -15,10 +15,8 @@ from careerpilot.core.date_utils import calculate_total_experience_years, format
 st.set_page_config(page_title="Settings — CareerPilot AI", page_icon="⚙️", layout="wide")
 
 from careerpilot.services.auth_service import AuthService
-from careerpilot.core.config import settings
 
-if not settings.is_demo_mode:
-    AuthService.require_auth()
+AuthService.require_auth()
 
 
 st.title("⚙️ System Configuration & Model Settings")

@@ -7,16 +7,28 @@ from careerpilot.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-# Ensure sqlite database parent directory exists
-db_path = Path(settings.SQLITE_DB_PATH)
-db_path.parent.mkdir(parents=True, exist_ok=True)
-
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{settings.SQLITE_DB_PATH}"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},  # Required for SQLite multi-threading
-)
+if settings.DATABASE_URL:
+    db_url = settings.DATABASE_URL.strip()
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    if "neon.tech" in db_url and "sslmode" not in db_url:
+        delim = "&" if "?" in db_url else "?"
+        db_url = f"{db_url}{delim}sslmode=require"
+    SQLALCHEMY_DATABASE_URL = db_url
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        pool_pre_ping=True,
+        pool_recycle=300,
+    )
+else:
+    # Ensure sqlite database parent directory exists
+    db_path = Path(settings.SQLITE_DB_PATH)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///{settings.SQLITE_DB_PATH}"
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"check_same_thread": False},  # Required for SQLite multi-threading
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -26,79 +38,80 @@ def init_db() -> None:
     from careerpilot.db.schema import CandidateProfileDB
     logger.info("Initializing database tables...")
     
-    # Check if existing applications or resume_versions tables are missing new columns
-    with engine.connect() as conn:
-        from sqlalchemy import text
-        try:
-            res = conn.execute(text("PRAGMA table_info(applications)")).fetchall()
-            col_names = [r[1] for r in res]
-            if col_names and "job_location" not in col_names:
-                logger.info("Migrating applications table to new schema...")
-                conn.execute(text("DROP TABLE IF EXISTS applications"))
-                conn.commit()
-
-            res_rv = conn.execute(text("PRAGMA table_info(resume_versions)")).fetchall()
-            col_rv = [r[1] for r in res_rv]
-            if col_rv and "pdf_file_path" not in col_rv:
-                logger.info("Migrating resume_versions table to add pdf_file_path...")
-                try:
-                    conn.execute(text("ALTER TABLE resume_versions ADD COLUMN pdf_file_path VARCHAR"))
-                    conn.commit()
-                except Exception:
-                    conn.execute(text("DROP TABLE IF EXISTS resume_versions"))
+    # Check if existing applications or resume_versions tables are missing new columns (SQLite only)
+    if "sqlite" in str(engine.url):
+        with engine.connect() as conn:
+            from sqlalchemy import text
+            try:
+                res = conn.execute(text("PRAGMA table_info(applications)")).fetchall()
+                col_names = [r[1] for r in res]
+                if col_names and "job_location" not in col_names:
+                    logger.info("Migrating applications table to new schema...")
+                    conn.execute(text("DROP TABLE IF EXISTS applications"))
                     conn.commit()
 
-            res_ce = conn.execute(text("PRAGMA table_info(candidate_evidences)")).fetchall()
-            col_ce = [r[1] for r in res_ce]
-            if col_ce:
-                for col, c_type in [
-                    ("fact_id", "VARCHAR"),
-                    ("source_type", "VARCHAR"),
-                    ("source_id", "VARCHAR"),
-                    ("source_document", "VARCHAR"),
-                    ("section", "VARCHAR"),
-                    ("evidence_status", "VARCHAR"),
-                    ("updated_at", "DATETIME"),
-                ]:
-                    if col not in col_ce:
-                        try:
-                            conn.execute(text(f"ALTER TABLE candidate_evidences ADD COLUMN {col} {c_type}"))
-                            conn.commit()
-                        except Exception:
-                            pass
-                # Backfill if fact_id was null
-                conn.execute(text("UPDATE candidate_evidences SET fact_id = id WHERE fact_id IS NULL"))
-                conn.execute(text("UPDATE candidate_evidences SET section = source_section WHERE section IS NULL"))
-                conn.execute(text("UPDATE candidate_evidences SET source_type = 'PROFESSIONAL_EXPERIENCE' WHERE source_type IS NULL"))
-                conn.commit()
+                res_rv = conn.execute(text("PRAGMA table_info(resume_versions)")).fetchall()
+                col_rv = [r[1] for r in res_rv]
+                if col_rv and "pdf_file_path" not in col_rv:
+                    logger.info("Migrating resume_versions table to add pdf_file_path...")
+                    try:
+                        conn.execute(text("ALTER TABLE resume_versions ADD COLUMN pdf_file_path VARCHAR"))
+                        conn.commit()
+                    except Exception:
+                        conn.execute(text("DROP TABLE IF EXISTS resume_versions"))
+                        conn.commit()
 
-            res_app = conn.execute(text("PRAGMA table_info(applications)")).fetchall()
-            col_app = [r[1] for r in res_app]
-            if col_app:
-                for col, c_type in [
-                    ("canonical_job_id", "VARCHAR"),
-                    ("source", "VARCHAR"),
-                    ("resume_version", "VARCHAR"),
-                    ("recruiter", "VARCHAR"),
-                    ("final_outcome", "VARCHAR"),
-                    ("status_history_json", "JSON"),
-                ]:
-                    if col not in col_app:
-                        try:
-                            conn.execute(text(f"ALTER TABLE applications ADD COLUMN {col} {c_type}"))
-                            conn.commit()
-                        except Exception:
-                            pass
-            res_cp = conn.execute(text("PRAGMA table_info(candidate_profiles)")).fetchall()
-            col_cp = [r[1] for r in res_cp]
-            if col_cp and "user_id" not in col_cp:
-                try:
-                    conn.execute(text("ALTER TABLE candidate_profiles ADD COLUMN user_id VARCHAR"))
+                res_ce = conn.execute(text("PRAGMA table_info(candidate_evidences)")).fetchall()
+                col_ce = [r[1] for r in res_ce]
+                if col_ce:
+                    for col, c_type in [
+                        ("fact_id", "VARCHAR"),
+                        ("source_type", "VARCHAR"),
+                        ("source_id", "VARCHAR"),
+                        ("source_document", "VARCHAR"),
+                        ("section", "VARCHAR"),
+                        ("evidence_status", "VARCHAR"),
+                        ("updated_at", "DATETIME"),
+                    ]:
+                        if col not in col_ce:
+                            try:
+                                conn.execute(text(f"ALTER TABLE candidate_evidences ADD COLUMN {col} {c_type}"))
+                                conn.commit()
+                            except Exception:
+                                pass
+                    # Backfill if fact_id was null
+                    conn.execute(text("UPDATE candidate_evidences SET fact_id = id WHERE fact_id IS NULL"))
+                    conn.execute(text("UPDATE candidate_evidences SET section = source_section WHERE section IS NULL"))
+                    conn.execute(text("UPDATE candidate_evidences SET source_type = 'PROFESSIONAL_EXPERIENCE' WHERE source_type IS NULL"))
                     conn.commit()
-                except Exception:
-                    pass
-        except Exception as e:
-            logger.warning(f"Migration error: {e}")
+
+                res_app = conn.execute(text("PRAGMA table_info(applications)")).fetchall()
+                col_app = [r[1] for r in res_app]
+                if col_app:
+                    for col, c_type in [
+                        ("canonical_job_id", "VARCHAR"),
+                        ("source", "VARCHAR"),
+                        ("resume_version", "VARCHAR"),
+                        ("recruiter", "VARCHAR"),
+                        ("final_outcome", "VARCHAR"),
+                        ("status_history_json", "JSON"),
+                    ]:
+                        if col not in col_app:
+                            try:
+                                conn.execute(text(f"ALTER TABLE applications ADD COLUMN {col} {c_type}"))
+                                conn.commit()
+                            except Exception:
+                                pass
+                res_cp = conn.execute(text("PRAGMA table_info(candidate_profiles)")).fetchall()
+                col_cp = [r[1] for r in res_cp]
+                if col_cp and "user_id" not in col_cp:
+                    try:
+                        conn.execute(text("ALTER TABLE candidate_profiles ADD COLUMN user_id VARCHAR"))
+                        conn.commit()
+                    except Exception:
+                        pass
+            except Exception as e:
+                logger.warning(f"Migration error: {e}")
 
 
 

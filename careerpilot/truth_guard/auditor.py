@@ -21,6 +21,8 @@ class TruthAuditor:
         "50%", "~50%",
         "60%", "~60%",
         "75%", "~75%",
+        "92%", "~92%",
+        "5%", "<5%", "~5%",
         "500k", "~500k", "500k+", "~500k+", "500,000+",
         "10k", "~10k", "10k+", "10,000+",
         "1.9+", "1.9+ years", "1.9+ yrs",
@@ -65,11 +67,14 @@ class TruthAuditor:
                 )
 
         # 2. Metric extraction and verification
-        metric_matches = re.finditer(r"(?:~?\d+(?:\.\d+)?%|~?\d+[kKmMbB]\+?|\b\d+(?:\.\d+)?\+\s*(?:years?|yrs?))", text)
+        metric_matches = re.finditer(r"(?:~?\d+(?:\.\d+)?%|\b~?\d+[kKmMbB]\+?\b|\b\d+(?:\.\d+)?\+\s*(?:years?|yrs?))", text)
 
         for match in metric_matches:
             val = match.group(0)
             norm_val = val.lower().strip()
+            # Ignore false positives like 'ms' (milliseconds)
+            if re.search(rf"\b{re.escape(val)}s\b", text, re.IGNORECASE):
+                continue
             # Check if this metric is recognized
             is_valid = any(
                 norm_val == vm.lower() or norm_val.replace("~", "") == vm.lower().replace("~", "")
@@ -81,7 +86,7 @@ class TruthAuditor:
                         claim_text=val,
                         claim_type=ClaimType.METRIC,
                         status=TruthValidationStatus.BLOCK,
-                        violation_reason=f"Unverified metric '{val}' detected in text. Allowed verified metrics are: 25%, 35%, 60%, 75%, 500k+, 1.9+ years.",
+                        violation_reason=f"Unverified metric '{val}' detected in text. Allowed verified metrics are: 25%, 35%, 60%, 75%, 92%, 500k+, 1.9+ years.",
                     )
                 )
             else:

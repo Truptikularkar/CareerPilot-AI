@@ -76,7 +76,8 @@ class Settings(BaseSettings):
         default_factory=lambda: str(Path(__file__).resolve().parent.parent.parent / "data" / "chroma_db")
     )
 
-    # SQLite Database
+    # Database Settings (PostgreSQL/Neon or local SQLite)
+    DATABASE_URL: Optional[str] = Field(default_factory=lambda: _get_secret_or_env("DATABASE_URL"))
     SQLITE_DB_PATH: str = Field(
         default_factory=lambda: str(Path(__file__).resolve().parent.parent.parent / "data" / "careerpilot.db")
     )
@@ -142,7 +143,16 @@ class Settings(BaseSettings):
 
     @property
     def active_candidate_id(self) -> str:
-        """Returns candidate ID string matching current mode."""
+        """Returns candidate ID string matching current authenticated user, or default baseline."""
+        try:
+            import streamlit as st
+            cid = st.session_state.get("authenticated_candidate_id")
+            if cid:
+                return str(cid)
+        except Exception:
+            pass
+        if self.is_demo_mode:
+            return "alex_rivera_demo"
         return "trupti_kularkar"
 
     def validate_deployment_persistence(self) -> Tuple[bool, str]:

@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from careerpilot.db.session import get_db
+from careerpilot.core.config import settings
 import uuid
 from careerpilot.db.schema import (
     ApplicationDB,
@@ -175,10 +176,12 @@ class JobRepository:
             return db.query(JobDescriptionDB).filter(JobDescriptionDB.id == job_id).first()
 
     @classmethod
-    def save_job_analysis(cls, analysis: JobAnalysisResult) -> JobAnalysisDB:
+    def save_job_analysis(cls, analysis: JobAnalysisResult, candidate_id: Optional[str] = None) -> JobAnalysisDB:
+        cid = candidate_id or getattr(analysis, "candidate_id", None) or settings.active_candidate_id
         with get_db() as db:
             existing = db.query(JobAnalysisDB).filter(JobAnalysisDB.id == analysis.id).first()
             if existing:
+                existing.candidate_id = cid
                 existing.overall_fit_score = analysis.fit_score.overall_score
                 existing.scores_json = analysis.fit_score.model_dump()
                 existing.matched_skills_json = [m.requirement_skill for m in analysis.matches if m.is_matched]
@@ -194,7 +197,7 @@ class JobRepository:
             db_analysis = JobAnalysisDB(
                 id=analysis.id,
                 job_id=analysis.job_id,
-                candidate_id="trupti_kularkar",
+                candidate_id=cid,
                 overall_fit_score=analysis.fit_score.overall_score,
                 scores_json=analysis.fit_score.model_dump(),
                 matched_skills_json=[m.requirement_skill for m in analysis.matches if m.is_matched],
@@ -267,8 +270,9 @@ class ApplicationRepository:
         canonical_job_id: Optional[str] = None,
         source: str = "DIRECT",
         recruiter: Optional[str] = None,
-        candidate_id: str = "trupti_kularkar",
+        candidate_id: Optional[str] = None,
     ) -> Application:
+        cid = candidate_id or settings.active_candidate_id
         with get_db() as db:
             existing = db.query(ApplicationDB).filter(ApplicationDB.id == app_id).first()
             if not existing:
@@ -277,6 +281,8 @@ class ApplicationRepository:
             if existing:
                 existing.company_name = company
                 existing.role_title = job_title
+                if cid:
+                    existing.candidate_id = cid
                 if canonical_job_id:
                     existing.canonical_job_id = canonical_job_id
                 if source:
@@ -316,7 +322,7 @@ class ApplicationRepository:
             db_app = ApplicationDB(
                 id=app_id,
                 canonical_job_id=canonical_job_id or job_id,
-                candidate_id=candidate_id,
+                candidate_id=cid,
                 job_id=job_id,
                 company_name=company,
                 role_title=job_title,
@@ -369,8 +375,9 @@ class ApplicationRepository:
     ) -> List[Application]:
         with get_db() as db:
             query = db.query(ApplicationDB)
-            if candidate_id:
-                query = query.filter(ApplicationDB.candidate_id == candidate_id)
+            cid = candidate_id if candidate_id is not None else settings.active_candidate_id
+            if cid and cid != "ALL":
+                query = query.filter(ApplicationDB.candidate_id == cid)
             if status:
                 query = query.filter(ApplicationDB.status == status.value)
             if recommendation:
@@ -651,14 +658,21 @@ class AnalyticsRepository:
 
     @classmethod
     def get_dashboard_metrics(cls, candidate_id: Optional[str] = None) -> DashboardMetrics:
+        cid = candidate_id or settings.active_candidate_id
         with get_db() as db:
             total_jobs = db.query(JobDescriptionDB).count()
             apps_q = db.query(ApplicationDB)
-            if candidate_id:
-                apps_q = apps_q.filter(ApplicationDB.candidate_id == candidate_id)
+            if cid and cid != "ALL":
+                apps_q = apps_q.filter(ApplicationDB.candidate_id == cid)
             apps = apps_q.all()
-            preps = db.query(InterviewPrepDB).count()
-            mocks = db.query(MockSessionDB).filter(MockSessionDB.is_completed == True).all()
+            preps_q = db.query(InterviewPrepDB)
+            if cid and cid != "ALL":
+                preps_q = preps_q.filter(InterviewPrepDB.candidate_id == cid)
+            preps = preps_q.count()
+            mocks_q = db.query(MockSessionDB).filter(MockSessionDB.is_completed == True)
+            if cid and cid != "ALL":
+                mocks_q = mocks_q.filter(MockSessionDB.candidate_id == cid)
+            mocks = mocks_q.all()
 
             jobs_to_apply = sum(1 for a in apps if a.user_decision == DecisionRecommendation.APPLY.value or a.system_recommendation == DecisionRecommendation.APPLY.value)
             jobs_reviewed = sum(1 for a in apps if a.user_decision == DecisionRecommendation.REVIEW.value or a.system_recommendation == DecisionRecommendation.REVIEW.value)
@@ -865,6 +879,28 @@ class CandidateRepository:
                 db_prof = db.query(CandidateProfileDB).filter(CandidateProfileDB.user_id == user_id).first()
                 if db_prof:
                     return cls._db_to_model(db_prof)
+                user_rec = db.query(UserDB).filter(UserDB.id == user_id).first()
+                if user_rec:
+                    new_cid = candidate_id or f"cand_{uuid.uuid4().hex[:8]}"
+                    new_db_prof = CandidateProfileDB(
+                        id=new_cid,
+                        user_id=user_id,
+                        full_name=user_rec.full_name,
+                        email=user_rec.email,
+                        professional_summary="Professional candidate profile. Update your summary in Candidate Profile.",
+                        skills_json=[],
+                        experiences_json=[],
+                        projects_json=[],
+                        education_json=[],
+                        certifications_json=[],
+                        achievements_json=[],
+                        preferences_json={},
+                    )
+                    db.add(new_db_prof)
+                    db.commit()
+                    db.refresh(new_db_prof)
+                    return cls._db_to_model(new_db_prof)
+
             if candidate_id:
                 db_prof = db.query(CandidateProfileDB).filter(CandidateProfileDB.id == candidate_id).first()
                 if db_prof:
@@ -882,12 +918,13 @@ class CandidateRepository:
             if db_prof:
                 return cls._db_to_model(db_prof)
 
-
         # Fallback to parsing candidate files and seed the DB
         from careerpilot.parsers.candidate_parser import CandidateParser
         profile = CandidateParser.parse_all()
         if candidate_id:
             profile.id = candidate_id
+        if user_id:
+            profile.user_id = user_id
         cls.save_profile(profile, change_summary="Initial master profile baseline", changed_sections=["all"])
         return profile
 
@@ -907,7 +944,6 @@ class CandidateRepository:
             id=db_prof.id,
             user_id=getattr(db_prof, "user_id", None),
             full_name=db_prof.full_name,
-
             email=db_prof.email,
             phone=db_prof.phone,
             linkedin_url=db_prof.linkedin_url,
@@ -931,11 +967,15 @@ class CandidateRepository:
         profile: CandidateProfile,
         change_summary: str = "Updated profile",
         changed_sections: Optional[List[str]] = None,
+        candidate_id: Optional[str] = None,
     ) -> ProfileVersionDB:
         with get_db() as db:
-            existing = db.query(CandidateProfileDB).filter(CandidateProfileDB.id == profile.id).first()
-            if not existing:
-                existing = db.query(CandidateProfileDB).first()
+            cid = candidate_id or profile.id
+            existing = None
+            if cid:
+                existing = db.query(CandidateProfileDB).filter(CandidateProfileDB.id == cid).first()
+            if not existing and profile.user_id:
+                existing = db.query(CandidateProfileDB).filter(CandidateProfileDB.user_id == profile.user_id).first()
 
             skills_data = [s.model_dump() for s in profile.skills]
             exp_data = [e.model_dump() for e in profile.experiences]
@@ -959,11 +999,14 @@ class CandidateRepository:
                 existing.certifications_json = cert_data
                 existing.achievements_json = ach_data
                 existing.preferences_json = pref_data
+                if profile.user_id:
+                    existing.user_id = profile.user_id
                 existing.updated_at = datetime.now(timezone.utc)
                 db_prof = existing
             else:
                 db_prof = CandidateProfileDB(
-                    id=profile.id,
+                    id=cid or profile.id or f"cand_{uuid.uuid4().hex[:8]}",
+                    user_id=profile.user_id,
                     full_name=profile.full_name,
                     email=profile.email,
                     phone=profile.phone,
@@ -1004,9 +1047,10 @@ class CandidateRepository:
             # Remove old evidences for candidate
             db.query(CandidateEvidenceDB).filter(CandidateEvidenceDB.candidate_id == db_prof.id).delete()
             for ev in evidences:
+                ev_id = f"ev_{db_prof.id}_{ev.id}" if not ev.id.startswith(f"ev_{db_prof.id}_") else ev.id
                 db.add(
                     CandidateEvidenceDB(
-                        id=ev.id,
+                        id=ev_id,
                         fact_id=ev.fact_id or ev.id,
                         candidate_id=db_prof.id,
                         source_type=ev.source_type.value if hasattr(ev.source_type, "value") else str(ev.source_type),

@@ -208,6 +208,23 @@ class CandidateParser:
                 ],
                 metrics=["60% manual effort reduction", "<30 min onboarding time"],
             ),
+            Project(
+                name="CareerPilot AI — Multi-Agent Autonomous Career Copilot & RAG Job Platform",
+                project_type="PERSONAL_PROJECT",
+                description="End-to-end multi-agent AI career copilot with LangGraph cyclic state machines, hybrid RAG with ChromaDB, and Google Gemini API.",
+                technologies=["Python", "LangGraph", "Google Gemini API", "ChromaDB", "Streamlit", "SQLite", "GitHub REST API", "SQL", "Pydantic"],
+                responsibilities=[
+                    "Architected and deployed an end-to-end multi-agent AI system live on Streamlit Cloud using LangGraph cyclic state machines for autonomous job description analysis, resume tailoring, and interview preparation.",
+                    "Built a hybrid RAG retrieval pipeline with ChromaDB vector embeddings and BM25 sparse search, implementing strict ground-truth verification that prevents LLM hallucinations by cross-checking candidate claims against verified experience.",
+                    "Integrated Google Gemini 3.6-flash LLM to generate role-specific technical questionnaires across 3 difficulty tiers (Easy/Medium/Hard) and 4-6 hands-on coding & SQL challenges with complete executable solutions and complexity analysis.",
+                    "Designed a 9-dimension deterministic ATS match-scoring algorithm that parses requirements into Must-Have vs. Nice-to-Have skills, generating explainable recommendations (Apply, Review, Skip).",
+                ],
+                highlights=[
+                    "Zero-hallucination verification engine with hybrid RAG.",
+                    "Dynamic coding challenge and multi-level interview generation with Gemini AI.",
+                ],
+                metrics=["100% ground-truth verification", "Sub-2s RAG retrieval", "9-dimension ATS scoring"],
+            ),
         ]
 
 
@@ -225,6 +242,9 @@ class CandidateParser:
             Skill(name="BM25", category=SkillCategory.DATA_ENGINEERING, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Proficient", years_of_experience=1.0),
             Skill(name="LangGraph", category=SkillCategory.GENAI, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Proficient", years_of_experience=1.0),
             Skill(name="FastAPI", category=SkillCategory.PROGRAMMING, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Proficient", years_of_experience=1.0),
+            Skill(name="Streamlit", category=SkillCategory.PROGRAMMING, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Advanced", years_of_experience=1.0),
+            Skill(name="Pydantic", category=SkillCategory.PROGRAMMING, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Advanced", years_of_experience=1.5),
+            Skill(name="GitHub REST API", category=SkillCategory.DEVOPS, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Proficient", years_of_experience=1.0),
             Skill(name="Docker", category=SkillCategory.DEVOPS, evidence_level="PERSONAL_PROJECT", evidence_status="VERIFIED", proficiency_level="Intermediate", years_of_experience=1.0),
             Skill(name="PostgreSQL", category=SkillCategory.DATABASE, evidence_level="PROFESSIONAL", evidence_status="VERIFIED", proficiency_level="Proficient", years_of_experience=1.5),
         ]

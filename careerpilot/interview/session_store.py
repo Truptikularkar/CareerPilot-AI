@@ -35,7 +35,9 @@ class SessionStore:
         mode: MockInterviewMode = MockInterviewMode.FULL_INTERVIEW,
         difficulty: InterviewDifficulty = InterviewDifficulty.ADAPTIVE,
         persona: InterviewerPersona = InterviewerPersona.SENIOR_ENGINEER,
+        candidate_id: Optional[str] = None,
     ) -> MockSessionDB:
+        cid = candidate_id or settings.active_candidate_id
         with get_db() as db:
             existing = db.query(MockSessionDB).filter(MockSessionDB.id == session_id).first()
             if existing:
@@ -44,7 +46,7 @@ class SessionStore:
             db_session = MockSessionDB(
                 id=session_id,
                 job_id=job_id,
-                candidate_id="trupti_kularkar",
+                candidate_id=cid,
                 target_role=target_role,
                 current_difficulty=difficulty.value,
                 turns_json=[],

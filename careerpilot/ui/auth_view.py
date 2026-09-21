@@ -31,16 +31,9 @@ def render_login_page():
             st.markdown("### Welcome Back")
             st.caption("Sign in to access your candidate profile, tailored resumes, and applications.")
 
-            st.info(
-                "💡 **Sign In Credentials:**\n\n"
-                "- **Email:** `kularkartrupti123@gmail.com`\n"
-                "- **Password:** `9834055766@Liza`\n\n"
-                "*Pre-filled below for instant access. Or click **'📝 Create Account'** to create or reset with your own password.*"
-            )
-
             with st.form("login_form"):
-                email = st.text_input("Email Address:", value="kularkartrupti123@gmail.com").strip()
-                password = st.text_input("Password:", type="password", value="9834055766@Liza").strip()
+                email = st.text_input("Email Address:", placeholder="your.name@example.com").strip()
+                password = st.text_input("Password:", type="password", placeholder="Enter your password").strip()
                 device_type = st.selectbox(
                     "Device Type:",
                     ["Desktop / Laptop", "Mobile Phone", "Tablet / Workstation"],
@@ -70,27 +63,41 @@ def render_login_page():
                                 logger.error(f"Unexpected login error: {e}")
                                 st.error("An error occurred during authentication. Please try again.")
 
-            with st.expander("ℹ️ Forgot Password?"):
+            st.markdown("---")
+            st.markdown("##### 🚀 Fast Track / Reviewer Demo")
+            st.caption("Evaluating or testing CareerPilot AI? Explore all features instantly with the verified sample candidate profile.")
+            if st.button("✨ Continue with Sample Profile (1-Click Demo)", type="secondary", use_container_width=True):
+                with st.spinner("Signing in with verified sample profile..."):
+                    try:
+                        user, token = AuthService.login_demo_user(device_info="Desktop / Laptop")
+                        st.session_state["authenticated_user"] = user
+                        st.session_state["authenticated_candidate_id"] = user.candidate_id
+                        st.session_state["auth_session_token"] = token
+                        st.success(f"✓ Welcome, {user.full_name}!")
+                        st.rerun()
+                    except Exception as e:
+                        logger.error("Failed demo login: %s", e)
+                        st.error(f"Could not load demo profile: {e}")
+
+            with st.expander("ℹ️ Account Assistance & Password Reset"):
                 st.info(
-                    "**Automated Password Reset Notice:**\n\n"
-                    "Automated email recovery requires an enterprise SMTP email gateway, which is scheduled for future cloud deployments. "
-                    "In local and private installations, you can change your password securely while logged in under **Settings**, "
-                    "or sign in with your default verified account."
+                    "**Account Notes:**\n\n"
+                    "- If you already created an account, enter your email and password above.\n"
+                    "- In local/private installations, you can change your password under **Settings** once signed in.\n"
+                    "- You can also use the **'📝 Create Account'** tab to register your own candidate profile."
                 )
 
         with tab_signup:
-            st.markdown("### Create or Reset Account")
-            st.caption("Register an account or reset password for your candidate profile.")
-
-            st.info("💡 You can register a new account or set a new password for `kularkartrupti123@gmail.com` below.")
+            st.markdown("### Create New Account")
+            st.caption("Register an account to store your candidate profile, resume history, and job applications.")
 
             with st.form("signup_form"):
-                reg_name = st.text_input("Full Name:", value="Trupti Kularkar").strip()
-                reg_email = st.text_input("Email Address:", value="kularkartrupti123@gmail.com").strip()
-                reg_password = st.text_input("New Password (min 8 chars, letters & numbers):", type="password")
-                reg_confirm = st.text_input("Confirm Password:", type="password")
+                reg_name = st.text_input("Full Name*:", placeholder="e.g. Alex Johnson").strip()
+                reg_email = st.text_input("Email Address*:", placeholder="alex.johnson@example.com").strip()
+                reg_password = st.text_input("Password (min 8 chars, letters & numbers)*:", type="password")
+                reg_confirm = st.text_input("Confirm Password*:", type="password")
 
-                reg_submit = st.form_submit_button("Save Account & Sign In", type="primary", use_container_width=True)
+                reg_submit = st.form_submit_button("Create Account & Get Started", type="primary", use_container_width=True)
 
                 if reg_submit:
                     if not reg_name or not reg_email or not reg_password:
@@ -98,27 +105,31 @@ def render_login_page():
                     elif reg_password != reg_confirm:
                         st.error("Passwords do not match.")
                     else:
-                        try:
-                            user_in = UserCreate(
-                                email=reg_email,
-                                password=reg_password,
-                                full_name=reg_name,
-                            )
-                            with st.spinner("Creating secure account..."):
-                                new_user = AuthService.register_user(user_in)
-                                # Automatically log in
-                                user, token = AuthService.authenticate(
+                        valid_strength, strength_msg = AuthService.validate_password_strength(reg_password)
+                        if not valid_strength:
+                            st.error(strength_msg)
+                        else:
+                            try:
+                                user_in = UserCreate(
                                     email=reg_email,
                                     password=reg_password,
-                                    device_info="Desktop / Laptop",
+                                    full_name=reg_name,
                                 )
-                                st.session_state["authenticated_user"] = user
-                                st.session_state["authenticated_candidate_id"] = user.candidate_id
-                                st.session_state["auth_session_token"] = token
-                                st.success(f"✓ Account created! Welcome, {new_user.full_name}.")
-                                st.rerun()
-                        except ValueError as e:
-                            st.error(f"Registration Failed: {e}")
-                        except Exception as e:
-                            logger.error(f"Unexpected signup error: {e}")
-                            st.error(f"Failed to create account: {e}")
+                                with st.spinner("Creating secure account and candidate profile..."):
+                                    new_user = AuthService.register_user(user_in)
+                                    # Automatically log in to new account
+                                    user, token = AuthService.authenticate(
+                                        email=reg_email,
+                                        password=reg_password,
+                                        device_info="Desktop / Laptop",
+                                    )
+                                    st.session_state["authenticated_user"] = user
+                                    st.session_state["authenticated_candidate_id"] = user.candidate_id
+                                    st.session_state["auth_session_token"] = token
+                                    st.success(f"✓ Account created! Welcome, {new_user.full_name}.")
+                                    st.rerun()
+                            except ValueError as e:
+                                st.error(f"Registration Failed: {e}")
+                            except Exception as e:
+                                logger.error(f"Unexpected signup error: {e}")
+                                st.error(f"Failed to create account: {e}")

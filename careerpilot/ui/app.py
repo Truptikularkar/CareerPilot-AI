@@ -41,19 +41,7 @@ if not auth_user and token:
         st.session_state["authenticated_user"] = auth_user
         st.session_state["authenticated_candidate_id"] = auth_user.candidate_id
 
-if settings.is_demo_mode and not auth_user:
-    from careerpilot.models.auth import User
-    auth_user = User(
-        id="usr_trupti_kularkar",
-        email="kularkartrupti123@gmail.com",
-        full_name="Trupti Kularkar",
-        is_active=True,
-        candidate_id="trupti_kularkar",
-    )
-    st.session_state["authenticated_user"] = auth_user
-    st.session_state["authenticated_candidate_id"] = "trupti_kularkar"
-
-if not auth_user and not settings.is_demo_mode:
+if not auth_user:
     render_login_page()
     st.stop()
 
@@ -115,8 +103,8 @@ with st.sidebar:
     from careerpilot.llm import get_llm_status
     active_cand = CandidateService.get_active_profile()
 
-    if settings.is_demo_mode:
-        st.info("🌐 **Environment:** CLOUD / PORTFOLIO MODE\n\n*Verified Candidate Profile Active.*")
+    if active_cand.id == "trupti_kularkar":
+        st.info("🌐 **Environment:** SAMPLE PORTFOLIO BASELINE\n\n*Verified Candidate Profile Active.*")
         st.markdown("### 👤 Candidate Profile")
         st.markdown(f"**{active_cand.full_name}**")
         st.markdown(f"📍 {active_cand.location or 'Pune, Maharashtra, India'}")
@@ -125,8 +113,8 @@ with st.sidebar:
             st.markdown(f"💼 **{exp0.title}** at {exp0.company}")
         st.success("🔒 Candidate Ground-Truth: **Verified Portfolio Baseline**")
     else:
-        st.success("🔒 **Environment:** LOCAL PRIVATE\n\n*Canonical SQLite Source of Truth.*")
-        st.markdown("### 👤 Verified Candidate")
+        st.success("🔒 **Environment:** PERSONAL CANDIDATE ACCOUNT\n\n*Canonical SQLite / PostgreSQL Ground Truth.*")
+        st.markdown("### 👤 Candidate Profile")
         st.markdown(f"**{active_cand.full_name}**")
         st.markdown(f"📍 {active_cand.location or 'Flexible / Remote'}")
         if active_cand.experiences:
@@ -139,7 +127,7 @@ with st.sidebar:
             contact_parts.append(f"📞 {active_cand.phone}")
         if contact_parts:
             st.caption(" | ".join(contact_parts))
-        st.success("🔒 Candidate Ground-Truth: **SQLite Canonical Ledger**")
+        st.success("🔒 Candidate Ground-Truth: **Personal Verified Ledger**")
 
     st.markdown("---")
     st.markdown("### 🔌 Live Data Sources")
@@ -165,8 +153,10 @@ with st.sidebar:
 st.markdown('<div class="main-header">Welcome to CareerPilot AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">Your autonomous, evidence-grounded career intelligence, resume tailoring, and interview preparation copilot.</div>', unsafe_allow_html=True)
 
-if settings.is_demo_mode:
-    st.info(f"ℹ️ **Public Cloud Mode:** Operating with verified candidate profile (**{active_cand.full_name}**). Ground-truth evidence and Gemini API active.")
+if active_cand.id == "trupti_kularkar":
+    st.info(f"ℹ️ **Sample Profile Active:** Operating with verified candidate baseline (**{active_cand.full_name}**). Evidence and AI models active.")
+else:
+    st.info(f"ℹ️ **Personal Profile Active:** Operating with your candidate profile (**{active_cand.full_name}**). Use **Candidate Profile** in the left sidebar to update skills, add projects, or import a resume.")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:

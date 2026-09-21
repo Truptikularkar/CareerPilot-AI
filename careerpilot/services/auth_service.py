@@ -77,44 +77,32 @@ class AuthService:
 
 
     @classmethod
-    def register_user(cls, user_in: UserCreate) -> User:
+    def register_user(
+        cls,
+        user_in: Optional[UserCreate] = None,
+        *,
+        email: Optional[str] = None,
+        password: Optional[str] = None,
+        full_name: Optional[str] = None,
+    ) -> User:
         """
         Registers a new user account, creates an associated CandidateProfileDB,
-        and returns the user domain model.
+        and returns the user domain model. Rejects registrations for existing emails.
         """
+        if user_in is None:
+            if not email or not password or not full_name:
+                raise ValueError("email, password, and full_name are required for registration.")
+            user_in = UserCreate(email=email, password=password, full_name=full_name)
+
         email_clean = user_in.email.strip().lower()
 
         with get_db() as db:
             existing = db.query(UserDB).filter(UserDB.email == email_clean).first()
             if existing:
-                # Update password and activate user if account already exists
-                pwd_hash = cls.hash_password(user_in.password)
-                existing.password_hash = pwd_hash
-                if user_in.full_name:
-                    existing.full_name = user_in.full_name.strip()
-                existing.is_active = True
-                existing.updated_at = utc_now()
-                cand_db = db.query(CandidateProfileDB).filter(CandidateProfileDB.user_id == existing.id).first()
-                if not cand_db:
-                    cand_db = db.query(CandidateProfileDB).filter(CandidateProfileDB.id == "trupti_kularkar").first()
-                    if cand_db:
-                        cand_db.user_id = existing.id
-                cand_id = cand_db.id if cand_db else "trupti_kularkar"
-                db.commit()
-                db.refresh(existing)
-                logger.info("Updated credentials for existing user '%s' (%s)", email_clean, existing.id)
-                return User(
-                    id=existing.id,
-                    email=existing.email,
-                    full_name=existing.full_name,
-                    is_active=existing.is_active,
-                    created_at=existing.created_at,
-                    last_login_at=existing.last_login_at,
-                    candidate_id=cand_id,
-                )
+                raise ValueError(f"An account with email '{email_clean}' is already registered. Please sign in.")
 
             user_id = f"usr_{uuid.uuid4().hex[:12]}"
-            cand_id = f"cand_{uuid.uuid4().hex[:8]}"
+            cand_id = f"cand_{user_id}"
             pwd_hash = cls.hash_password(user_in.password)
 
             new_user = UserDB(
@@ -181,32 +169,16 @@ class AuthService:
         with get_db() as db:
             user_db = db.query(UserDB).filter(UserDB.email == email_clean).first()
             if not user_db:
-                if email_clean == "kularkartrupti123@gmail.com" and password_clean == "9834055766@Liza":
-                    user_db = UserDB(
-                        id="usr_trupti_kularkar",
-                        email=email_clean,
-                        password_hash=cls.hash_password(password_clean),
-                        full_name="Trupti Kularkar",
-                        is_active=True,
-                    )
-                    db.add(user_db)
-                    db.commit()
-                    db.refresh(user_db)
-                else:
-                    logger.warning("Failed login attempt for nonexistent user: %s", email_clean)
-                    raise ValueError("Invalid email or password.")
+                logger.warning("Failed login attempt for nonexistent user: %s", email_clean)
+                raise ValueError("Invalid email or password.")
 
             if not user_db.is_active:
                 logger.warning("Login attempted for deactivated account: %s", email_clean)
                 raise ValueError("Account is deactivated. Please contact support.")
 
             if not cls.verify_password(user_db.password_hash, password_clean):
-                if email_clean == "kularkartrupti123@gmail.com" and password_clean == "9834055766@Liza":
-                    user_db.password_hash = cls.hash_password(password_clean)
-                    db.commit()
-                else:
-                    logger.warning("Invalid password for user: %s", email_clean)
-                    raise ValueError("Invalid email or password.")
+                logger.warning("Invalid password for user: %s", email_clean)
+                raise ValueError("Invalid email or password.")
 
             # Update last login timestamp
             now = utc_now()
@@ -233,8 +205,32 @@ class AuthService:
 
             # Find linked candidate profile ID
             cand_db = db.query(CandidateProfileDB).filter(CandidateProfileDB.user_id == user_db.id).first()
-            cand_id = cand_db.id if cand_db else None
+            if not cand_db and (user_db.id == "usr_trupti_kularkar" or user_db.email in ("kularkartrupti123@gmail.com", "kularkartrupti@gmail.com")):
+                cand_db = db.query(CandidateProfileDB).filter(CandidateProfileDB.id == "trupti_kularkar").first()
+                if cand_db:
+                    cand_db.user_id = user_db.id
 
+            if not cand_db:
+                cand_id = f"cand_{uuid.uuid4().hex[:8]}"
+                cand_db = CandidateProfileDB(
+                    id=cand_id,
+                    user_id=user_db.id,
+                    full_name=user_db.full_name,
+                    email=user_db.email,
+                    professional_summary="Professional candidate profile. Update your summary in Candidate Profile.",
+                    skills_json=[],
+                    experiences_json=[],
+                    projects_json=[],
+                    education_json=[],
+                    certifications_json=[],
+                    achievements_json=[],
+                    preferences_json={},
+                    created_at=now,
+                    updated_at=now,
+                )
+                db.add(cand_db)
+
+            cand_id = cand_db.id
             db.commit()
             logger.info("User '%s' successfully authenticated from %s", email_clean, device_info)
 
@@ -247,6 +243,89 @@ class AuthService:
                 last_login_at=user_db.last_login_at,
                 candidate_id=cand_id,
             )
+            try:
+                import streamlit as st
+                st.session_state["authenticated_user"] = user_model
+                st.session_state["authenticated_candidate_id"] = cand_id
+                st.session_state["auth_session_token"] = token
+            except Exception:
+                pass
+            return user_model, token
+
+    @classmethod
+    def login_demo_user(cls, device_info: str = "Desktop / Laptop") -> Tuple[User, str]:
+        """
+        Convenience method to authenticate as the verified sample candidate (Trupti Kularkar)
+        for instant 1-click exploration and portfolio evaluation without credentials.
+        """
+        from careerpilot.db.session import init_db
+        init_db()
+
+        with get_db() as db:
+            user_db = db.query(UserDB).filter(
+                (UserDB.id == "usr_trupti_kularkar") | (UserDB.email == "kularkartrupti123@gmail.com")
+            ).first()
+
+            if not user_db:
+                user_db = UserDB(
+                    id="usr_trupti_kularkar",
+                    email="kularkartrupti123@gmail.com",
+                    password_hash=cls.hash_password("9834055766@Liza"),
+                    full_name="Trupti Kularkar",
+                    is_active=True,
+                    created_at=utc_now(),
+                    updated_at=utc_now(),
+                )
+                db.add(user_db)
+                db.commit()
+                db.refresh(user_db)
+
+            cand_db = db.query(CandidateProfileDB).filter(
+                (CandidateProfileDB.user_id == user_db.id) | (CandidateProfileDB.id == "trupti_kularkar")
+            ).first()
+
+            if cand_db and not cand_db.user_id:
+                cand_db.user_id = user_db.id
+
+            now = utc_now()
+            user_db.last_login_at = now
+
+            token = secrets.token_urlsafe(32)
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
+            session_id = f"sess_{uuid.uuid4().hex[:12]}"
+            expires_at = now + timedelta(hours=cls.DEFAULT_EXPIRY_HOURS)
+
+            new_session = UserSessionDB(
+                id=session_id,
+                user_id=user_db.id,
+                token_hash=token_hash,
+                device_info=device_info,
+                expires_at=expires_at,
+                is_active=True,
+                created_at=now,
+                last_activity_at=now,
+            )
+            db.add(new_session)
+            db.commit()
+
+            cand_id = cand_db.id if cand_db else "trupti_kularkar"
+            user_model = User(
+                id=user_db.id,
+                email=user_db.email,
+                full_name=user_db.full_name,
+                is_active=user_db.is_active,
+                created_at=user_db.created_at,
+                last_login_at=user_db.last_login_at,
+                candidate_id=cand_id,
+            )
+            try:
+                import streamlit as st
+                st.session_state["authenticated_user"] = user_model
+                st.session_state["authenticated_candidate_id"] = cand_id
+                st.session_state["auth_session_token"] = token
+            except Exception:
+                pass
+            logger.info("Demo user '%s' successfully signed in via 1-click guest mode.", user_db.email)
             return user_model, token
 
     @classmethod
@@ -323,19 +402,30 @@ class AuthService:
             )
 
     @classmethod
-    def logout(cls, token: str) -> bool:
-        """Revokes active session associated with token."""
-        if not token:
-            return False
-        token_hash = hashlib.sha256(token.encode()).hexdigest()
-        with get_db() as db:
-            session_db = db.query(UserSessionDB).filter(UserSessionDB.token_hash == token_hash).first()
-            if session_db:
-                session_db.is_active = False
-                db.commit()
-                logger.info("Session %s logged out.", session_db.id)
-                return True
-        return False
+    def logout(cls, token: Optional[str] = None) -> bool:
+        """Revokes active session associated with token and clears Streamlit session state."""
+        revoked = False
+        if token:
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
+            with get_db() as db:
+                session_db = db.query(UserSessionDB).filter(UserSessionDB.token_hash == token_hash).first()
+                if session_db:
+                    session_db.is_active = False
+                    db.commit()
+                    logger.info("Session %s logged out.", session_db.id)
+                    revoked = True
+
+        try:
+            import streamlit as st
+            if hasattr(st, "session_state"):
+                st.session_state.pop("authenticated_user", None)
+                st.session_state.pop("authenticated_candidate_id", None)
+                st.session_state.pop("auth_session_token", None)
+                st.session_state.pop("careerpilot_initialized", None)
+        except Exception:
+            pass
+
+        return revoked or token is None
 
     @classmethod
     def change_password(
@@ -403,21 +493,6 @@ class AuthService:
             import streamlit as st
         except ImportError:
             return None
-
-        # In DEMO / Cloud Portfolio mode, automatically provide demo portfolio user
-        if settings.is_demo_mode:
-            user = st.session_state.get("authenticated_user")
-            if not user or not isinstance(user, User):
-                user = User(
-                    id="usr_trupti_kularkar",
-                    email="kularkartrupti123@gmail.com",
-                    full_name="Trupti Kularkar",
-                    is_active=True,
-                    candidate_id="trupti_kularkar",
-                )
-                st.session_state["authenticated_user"] = user
-                st.session_state["authenticated_candidate_id"] = "trupti_kularkar"
-            return user
 
         user = st.session_state.get("authenticated_user")
         if user and isinstance(user, User):

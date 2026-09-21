@@ -14,10 +14,8 @@ from careerpilot.db.repository import ResumeRepository
 st.set_page_config(page_title="ATS Analysis — CareerPilot AI", page_icon="🎯", layout="wide")
 
 from careerpilot.services.auth_service import AuthService
-from careerpilot.core.config import settings
 
-if not settings.is_demo_mode:
-    AuthService.require_auth()
+AuthService.require_auth()
 
 
 st.title("🎯 ATS Compatibility & Resume Scoring Engine")

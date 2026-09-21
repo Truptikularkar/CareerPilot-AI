@@ -72,8 +72,8 @@ class BulletSelector:
             # Sort bullets by relevance score
             scored_bullets.sort(key=lambda x: x[0], reverse=True)
 
-            # Budget bullets for 1-page target: top 3-4 bullets for primary, 2 for secondary
-            bullet_limit = 4 if getattr(exp, "is_current", False) or exp == cand.experiences[0] else 2
+            # Budget bullets for 1-page target: top 4-5 bullets for primary, 2 for secondary
+            bullet_limit = 5 if getattr(exp, "is_current", False) or exp == cand.experiences[0] else 2
             selected_bullet_texts = [b[1] for b in scored_bullets[:bullet_limit]]
 
             bullet_objects = [
@@ -110,8 +110,9 @@ class BulletSelector:
         candidate: Optional[CandidateProfile] = None,
     ) -> List[ResumeProjectEntry]:
         """
-        Assembles and prioritizes projects from the candidate profile based on target strategy and JD match.
-        Budgeted for a concise 1-page resume (top 2 most relevant projects).
+        Assembles and prioritizes all relevant projects from the candidate profile based on target strategy and JD match.
+        Dynamically selects up to 3-4 suitable projects with 2-3 impactful, metric-bearing bullets each
+        to guarantee a rich, complete 1-page resume layout.
         """
         cand = cls._get_candidate(candidate)
         if not cand.projects:
@@ -133,7 +134,7 @@ class BulletSelector:
             # Match technologies with JD
             for tech in proj.technologies:
                 if tech.lower() in jd_text_lower:
-                    score += 3.0
+                    score += 3.5
                 if any(emp in tech.lower() for emp in emphasis_lower):
                     score += 2.5
 
@@ -142,16 +143,39 @@ class BulletSelector:
             if any(emp in desc_lower for emp in emphasis_lower):
                 score += 2.0
 
+            # Metric bonus
+            if getattr(proj, "metrics", None):
+                score += 2.0
+
             return score
 
         sorted_projects = sorted(cand.projects, key=score_project, reverse=True)
-        # Select top 2 most relevant projects for 1-page resume budget
-        selected_projs = sorted_projects[:2]
+        # Select up to 3-4 relevant projects to build a dense, professional 1-page resume
+        # If candidate has <= 4 projects, keep top 3-4
+        max_projects = 3 if (cand.experiences and len(cand.experiences) >= 2) else 4
+        selected_projs = sorted_projects[:max_projects]
 
         entries: List[ResumeProjectEntry] = []
         for p in selected_projs:
-            # Pick top 2 concise bullets per project
-            bullets_to_use = (p.responsibilities or p.highlights or [p.description])[:2]
+            # Score and prioritize project bullets based on metrics and JD keywords
+            all_raw_bullets = p.responsibilities or p.highlights or [p.description]
+            scored_p_bullets = []
+            for b_idx, b_text in enumerate(all_raw_bullets):
+                b_score = 0.0
+                b_lower = b_text.lower()
+                for tech in p.technologies:
+                    if tech.lower() in b_lower:
+                        b_score += 2.0
+                if any(k in b_lower for k in jd_text_lower.split() if len(k) > 3):
+                    b_score += 1.5
+                # Bonus for verified numbers, percentages, speed
+                if any(c.isdigit() for c in b_text) and ("%" in b_text or "accuracy" in b_lower or "reduced" in b_lower or "latency" in b_lower or "sub-" in b_lower):
+                    b_score += 3.0
+                scored_p_bullets.append((b_score, b_idx, b_text))
+
+            scored_p_bullets.sort(key=lambda x: x[0], reverse=True)
+            # Pick top 2-3 most impactful bullets per project
+            bullets_to_use = [item[2] for item in scored_p_bullets[:3]] if len(scored_p_bullets) >= 2 else [all_raw_bullets[0]]
 
             b_objs = [
                 ResumeBullet(

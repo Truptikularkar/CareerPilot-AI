@@ -75,14 +75,18 @@ def check_knowledge_data() -> ComponentHealth:
 
 
 def check_database() -> ComponentHealth:
-    """Verifies local SQLite database connectivity."""
+    """Verifies database connectivity across SQLite and PostgreSQL."""
     try:
         from careerpilot.db.session import engine, init_db
         init_db()
         from sqlalchemy import text
         with engine.connect() as conn:
-            res = conn.execute(text("SELECT count(*) FROM sqlite_master WHERE type='table'")).scalar()
-        return ComponentHealth("Database", HealthStatus.HEALTHY, f"SQLite database connected with {res} tables.", {"tables_count": res})
+            if engine.dialect.name == "sqlite":
+                res = conn.execute(text("SELECT count(*) FROM sqlite_master WHERE type='table'")).scalar()
+            else:
+                res = conn.execute(text("SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'")).scalar()
+        db_type = "PostgreSQL" if engine.dialect.name == "postgresql" else "SQLite"
+        return ComponentHealth("Database", HealthStatus.HEALTHY, f"{db_type} database connected with {res} tables.", {"tables_count": res})
     except Exception as e:
         logger.error("Health check database failure: %s", str(e))
         return ComponentHealth("Database", HealthStatus.UNAVAILABLE, f"Database connectivity error: {str(e)}", {})

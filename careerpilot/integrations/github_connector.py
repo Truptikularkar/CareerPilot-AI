@@ -193,6 +193,7 @@ class GitHubConnector:
             if repo_data.get("language"):
                 desc += f" (Built with {repo_data['language']})"
 
+            target_user = cls.resolve_username(candidate_id=candidate_id)
             if existing:
                 existing.content = desc
                 existing.status = "VERIFIED"
@@ -208,7 +209,7 @@ class GitHubConnector:
                     content=desc,
                     source_type=ProvenanceSourceType.GITHUB.value,
                     source_id=repo_data["name"],
-                    source_document=repo_data.get("html_url", f"https://github.com/{cls.DEFAULT_USERNAME}"),
+                    source_document=repo_data.get("html_url", f"https://github.com/{target_user}"),
                     status="VERIFIED",
                     created_at=datetime.now(timezone.utc),
                     updated_at=datetime.now(timezone.utc),
@@ -217,4 +218,59 @@ class GitHubConnector:
 
             db.commit()
             logger.info(f"Approved and imported GitHub project '{repo_data['name']}' into CandidateEvidenceDB.")
+
+            # Also add to active CandidateProfile and trigger RAG synchronization
+            try:
+                from careerpilot.services.candidate_service import CandidateService
+                from careerpilot.models.candidate import Project, Skill
+                from careerpilot.core.constants import SkillCategory
+
+                profile = CandidateService.get_active_profile(candidate_id=candidate_id)
+                repo_name = repo_data["name"]
+                proj_name = repo_name.replace("-", " ").replace("_", " ").title()
+                techs = [repo_data["language"]] if repo_data.get("language") else ["Python"]
+                if repo_data.get("topics"):
+                    techs.extend([t.replace("-", " ").title() for t in repo_data["topics"][:4]])
+
+                existing_proj = next((p for p in profile.projects if p.name.lower() in (proj_name.lower(), repo_name.lower())), None)
+                if not existing_proj:
+                    new_proj = Project(
+                        name=proj_name,
+                        project_type="PERSONAL_PROJECT",
+                        description=desc,
+                        technologies=techs,
+                        responsibilities=[
+                            f"Developed and maintained open-source repository {repo_name} on GitHub ({repo_data.get('html_url')}).",
+                            desc,
+                        ],
+                        highlights=[f"Public GitHub project with {repo_data.get('stars', 0)} stars."],
+                        metrics=[f"GitHub Repo: {repo_name}"],
+                    )
+                    profile.projects.append(new_proj)
+
+                # Register language as skill if not present
+                if repo_data.get("language"):
+                    lang = repo_data["language"]
+                    if not any(s.name.lower() == lang.lower() for s in profile.skills):
+                        profile.skills.append(
+                            Skill(
+                                name=lang,
+                                category=SkillCategory.PROGRAMMING,
+                                evidence_level="PERSONAL_PROJECT",
+                                evidence_status="VERIFIED",
+                                proficiency_level="Proficient",
+                                years_of_experience=1.0,
+                            )
+                        )
+
+                CandidateService.save_active_profile(
+                    profile=profile,
+                    change_summary=f"Imported GitHub repository project: {proj_name}",
+                    changed_sections=["projects", "skills"],
+                    sync_rag_immediately=True,
+                )
+                logger.info("Successfully added GitHub project '%s' to active CandidateProfile and re-indexed Candidate RAG.", proj_name)
+            except Exception as ex:
+                logger.warning("Could not sync GitHub project to CandidateProfile: %s", ex)
+
             return True

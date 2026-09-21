@@ -416,13 +416,14 @@ class CandidateService:
         chunks = []
         for ev in evidences:
             fact_id = ev.fact_id or ev.id
-            chunk_id = f"cand_ev_{fact_id}"
+            chunk_id = f"cand_{prof.id}_{fact_id}"
             chunks.append({
                 "chunk_id": chunk_id,
                 "text": f"{ev.source_section}: {ev.content}",
                 "metadata": {
                     "source_file": "SQLite Candidate Profile",
                     "source_section": ev.source_section,
+                    "candidate_id": prof.id,
                     "fact_id": fact_id,
                     "source_type": ev.source_type.value if hasattr(ev.source_type, "value") else str(ev.source_type),
                     "source_id": ev.source_id or "",

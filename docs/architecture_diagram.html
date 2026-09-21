@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPilot AI — Architecture Diagram Export</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --border-color: #1f2937;
+            --accent-color: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .diagram-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 1150px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #f9fafb;
+        }
+
+        .btn {
+            background: var(--accent-gradient);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.35);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5);
+        }
+
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        footer {
+            margin-top: 1rem;
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="badge">Architecture Asset Generator</div>
+        <h1>CareerPilot AI System Architecture</h1>
+        <p class="subtitle">Export high-resolution images of your system architecture for LinkedIn posts, GitHub READMEs, and technical portfolios.</p>
+    </div>
+
+    <!-- Diagram 1: System Flowchart -->
+    <div class="diagram-card" id="card-system-architecture">
+        <div class="card-header">
+            <div>
+                <div class="card-title">1. High-Level System & Dual-Store RAG Architecture</div>
+            </div>
+            <button class="btn" onclick="exportSvgToPng('arch-svg-container', 'careerpilot_system_architecture.png')">
+                📥 Download PNG for LinkedIn
+            </button>
+        </div>
+        <div class="mermaid-container" id="arch-svg-container">
+            <div class="mermaid">
+flowchart TD
+    User(["👤 Candidate / User"]) --> UI["💻 Streamlit Multi-Page UI\n(10 Workflow Pages)"]
+    
+    subgraph Presentation_Layer ["1. Presentation & Interaction Layer"]
+        UI --> AuthHealth["🛡️ Diagnostics & Security\n(Argon2id, Session Tokens, Health)"]
+        UI --> ServiceLayer["⚙️ CareerPilotService Orchestrator\n(careerpilot/services)"]
+    end
+
+    subgraph Service_Orchestration ["2. LangGraph Stateful Multi-Agent Layer"]
+        ServiceLayer --> JAGraph["📋 Job Analysis Graph\n(Taxonomy & Fit Scoring)"]
+        ServiceLayer --> RTGraph["📝 Resume Tailoring Graph\n(4 Strategic Career Tracks)"]
+        ServiceLayer --> IPGraph["🎯 Interview Prep Graph\n(7 Q&A Modes & Roadmaps)"]
+        ServiceLayer --> MIGraph["🎙️ Adaptive Mock Graph\n(10-Dim Turn Evaluator)"]
+    end
+
+    subgraph Intelligence_Subsystems ["3. Truth Guard & Rule Engines"]
+        JAGraph --> RoleClassifier["Role Reality Classifier"]
+        JAGraph --> FitScorer["Deterministic Fit Scorer"]
+        
+        RTGraph --> StrategyEngine["Strategy Selector"]
+        RTGraph --> TruthGuard["🛡️ Deterministic Truth Guard\n(Anti-Hallucination Audit)"]
+        RTGraph --> ATSScorer["📊 7-Component ATS Scorer"]
+        
+        IPGraph --> ReadinessSeed["Readiness Seed Engine"]
+        IPGraph --> STARGen["STAR Story Generator"]
+        IPGraph --> RoadmapGen["Multi-Day Study Roadmap"]
+        
+        MIGraph --> AdaptiveRouter["Dynamic Difficulty Router"]
+        MIGraph --> RubricEvaluator["10-Rubric Turn Evaluator"]
+    end
+
+    subgraph Retrieval_Layer ["4. Isolated Dual-Store Local RAG (ChromaDB)"]
+        CandidateRAG[("📁 Candidate Evidence Store\n(Indexed Work History & Bullets)")]
+        KnowledgeRAG[("📚 Technical Knowledge Store\n(System Design & Engineering Concepts)")]
+        
+        RoleClassifier -.-> CandidateRAG
+        RTGraph -.-> CandidateRAG
+        TruthGuard -.-> CandidateRAG
+        IPGraph -.-> CandidateRAG
+        IPGraph -.-> KnowledgeRAG
+        MIGraph -.-> CandidateRAG
+        MIGraph -.-> KnowledgeRAG
+    end
+
+    subgraph Persistence_Layer ["5. Persistence & Output Layer"]
+        SQLite[("🗄️ SQLite Database\n(SQLAlchemy 2.0 ORM)")]
+        DocxGen["📄 python-docx Exporter\n(Single-Column Table-Free ATS DOCX/PDF)"]
+        FileStore["💾 Session Logs & Demo Store\n(Synthetic Alex Rivera Sandbox)"]
+        
+        ServiceLayer --> SQLite
+        RTGraph --> DocxGen --> FileStore
+        MIGraph --> SQLite
+    end
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagram 2: Sequence Data Lifecycle -->
+    <div class="diagram-card" id="card-sequence-lifecycle">
+        <div class="card-header">
+            <div>
+                <div class="card-title">2. End-to-End Data Flow & Anti-Hallucination Pipeline</div>
+            </div>
+            <button class="btn" onclick="exportSvgToPng('seq-svg-container', 'careerpilot_pipeline_flow.png')">
+                📥 Download PNG for LinkedIn
+            </button>
+        </div>
+        <div class="mermaid-container" id="seq-svg-container">
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Candidate as User / Recruiter
+    participant UI as Streamlit UI
+    participant Service as CareerPilotService
+    participant RAG as Dual-Store RAG
+    participant Graph as LangGraph Engine
+    participant TG as Truth Guard
+    participant ATS as ATS Evaluator
+    participant DB as SQLite DB
+
+    Candidate->>UI: Upload/Paste Job Description
+    UI->>Service: analyze_job(jd_text)
+    Service->>Graph: Execute JobAnalysisGraph
+    Graph->>RAG: Retrieve Candidate Evidence Chunks
+    RAG-->>Graph: Return Grounded Chunks (Top-K)
+    Graph->>Graph: Calculate Fit Score & Decision (Apply/Review/Skip)
+    Graph->>DB: Persist Job & Analysis
+    DB-->>UI: Display Role Taxonomy, Fit Score (0-100), Risks
+
+    Candidate->>UI: Request Tailored Resume (Strategy: AI Data Engineer)
+    UI->>Service: generate_resume(app_id, strategy)
+    Service->>Graph: Execute ResumeGraph
+    Graph->>RAG: Retrieve Relevant Verified Bullets
+    Graph->>TG: Audit Claims against Candidate Ledger
+    TG-->>Graph: Truth Status: PASS (0 Hallucinations)
+    Graph->>ATS: Compute ATS-Style Score & Keyword Matrix
+    Graph->>DB: Persist ResumeVersion & ATSReport
+    Graph-->>UI: Download Clean ATS DOCX / PDF Resume
+
+    Candidate->>UI: Launch Interview Prep & Adaptive Mock
+    UI->>Service: start_mock_interview(persona, mode)
+    Service->>Graph: Initialize MockInterviewState
+    Graph-->>UI: Display Question 1
+    Candidate->>UI: Submit Response
+    UI->>Service: submit_mock_answer(answer_text)
+    Service->>Graph: Evaluate Turn (10 Dimensions)
+    Graph->>Graph: Route Adaptively (Escalate / Follow-Up / Move Topic)
+    Graph->>DB: Persist MockTurn
+    Service-->>UI: Deliver Final Scorecard & Study Recommendations
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        CareerPilot AI &bull; Evidence-Grounded Multi-Agent Intelligence Platform
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#111827',
+                primaryColor: '#1e3a8a',
+                primaryTextColor: '#f3f4f6',
+                primaryBorderColor: '#3b82f6',
+                lineColor: '#60a5fa',
+                secondaryColor: '#1e293b',
+                tertiaryColor: '#0f172a'
+            }
+        });
+
+        function exportSvgToPng(containerId, filename) {
+            const container = document.getElementById(containerId);
+            const svgElement = container.querySelector('svg');
+            if (!svgElement) {
+                alert('Diagram is still rendering, please wait a moment.');
+                return;
+            }
+
+            const svgClone = svgElement.cloneNode(true);
+            const bbox = svgElement.getBoundingClientRect();
+            
+            const width = bbox.width || 1200;
+            const height = bbox.height || 800;
+            svgClone.setAttribute('width', width);
+            svgClone.setAttribute('height', height);
+
+            const svgString = new XMLSerializer().serializeToString(svgClone);
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const URL = window.URL || window.webkitURL || window;
+            const blobURL = URL.createObjectURL(svgBlob);
+
+            const image = new Image();
+            image.onload = function () {
+                const canvas = document.createElement('canvas');
+                const scale = 2.5;
+                canvas.width = width * scale;
+                canvas.height = height * scale;
+
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#0b0f19';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.scale(scale, scale);
+                ctx.drawImage(image, 0, 0);
+
+                URL.revokeObjectURL(blobURL);
+
+                const pngURL = canvas.toDataURL('image/png');
+                const downloadLink = document.createElement('a');
+                downloadLink.href = pngURL;
+                downloadLink.download = filename;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            };
+            image.src = blobURL;
+        }
+    </script>
+</body>
+</html>

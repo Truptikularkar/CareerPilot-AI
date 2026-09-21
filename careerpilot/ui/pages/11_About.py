@@ -11,10 +11,8 @@ import streamlit as st
 st.set_page_config(page_title="About — CareerPilot AI", page_icon="ℹ️", layout="wide")
 
 from careerpilot.services.auth_service import AuthService
-from careerpilot.core.config import settings
 
-if not settings.is_demo_mode:
-    AuthService.require_auth()
+AuthService.require_auth()
 
 
 st.title("ℹ️ About CareerPilot AI")

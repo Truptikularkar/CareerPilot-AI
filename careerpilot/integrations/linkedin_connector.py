@@ -274,9 +274,76 @@ class LinkedInConnector:
             db.commit()
 
         logger.info(f"Imported {len(imported_items)} items from LinkedIn Profile PDF.")
+
+        # Also merge extracted skills and certifications into active CandidateProfile and sync Candidate RAG
+        new_skills_count = 0
+        try:
+            from careerpilot.services.candidate_service import CandidateService
+            from careerpilot.models.candidate import Skill
+            from careerpilot.core.constants import SkillCategory
+
+            profile = CandidateService.get_active_profile(candidate_id=candidate_id)
+            existing_skill_names = {s.name.lower(): s for s in profile.skills}
+
+            for item in imported_items:
+                sec = item.get("section")
+                stmt = item.get("statement", "").strip()
+                if not stmt or len(stmt) > 60:
+                    continue
+
+                if sec == "skills":
+                    # Clean skill name
+                    s_clean = stmt.replace("•", "").strip()
+                    if s_clean and len(s_clean) >= 2 and s_clean.lower() not in existing_skill_names:
+                        # Determine category heuristically
+                        s_lower = s_clean.lower()
+                        cat = SkillCategory.PROGRAMMING
+                        if any(w in s_lower for w in ["cloud", "gcp", "aws", "azure"]):
+                            cat = SkillCategory.CLOUD
+                        elif any(w in s_lower for w in ["data", "etl", "elt", "pipeline", "airflow", "spark", "kafka"]):
+                            cat = SkillCategory.DATA_ENGINEERING
+                        elif any(w in s_lower for w in ["ai", "genai", "llm", "rag", "vertex", "gemini", "gpt"]):
+                            cat = SkillCategory.GENAI
+                        elif any(w in s_lower for w in ["sql", "database", "bigquery", "postgres", "mongo", "chroma"]):
+                            cat = SkillCategory.DATABASE
+                        elif any(w in s_lower for w in ["docker", "git", "ci/cd", "kubernetes", "linux"]):
+                            cat = SkillCategory.DEVOPS
+
+                        new_skill = Skill(
+                            name=s_clean,
+                            category=cat,
+                            evidence_level="PROFESSIONAL",
+                            evidence_status="VERIFIED",
+                            proficiency_level="Proficient",
+                            years_of_experience=1.5,
+                        )
+                        profile.skills.append(new_skill)
+                        existing_skill_names[s_clean.lower()] = new_skill
+                        new_skills_count += 1
+
+                elif sec == "certifications":
+                    c_clean = stmt.replace("•", "").strip()
+                    if c_clean and len(c_clean) >= 4 and c_clean not in profile.certifications:
+                        profile.certifications.append(c_clean)
+
+            if new_skills_count > 0:
+                CandidateService.save_active_profile(
+                    profile=profile,
+                    change_summary=f"Imported {new_skills_count} new skills from LinkedIn Profile PDF",
+                    changed_sections=["skills", "certifications"],
+                    sync_rag_immediately=True,
+                )
+                logger.info("Successfully added %d new skills from LinkedIn PDF to active candidate profile and synced RAG.", new_skills_count)
+            else:
+                # Even if no new skills, sync RAG with latest evidence
+                CandidateService.sync_profile_to_rag(profile)
+        except Exception as ex:
+            logger.warning("Could not sync LinkedIn PDF items to CandidateProfile: %s", ex)
+
         return {
             "status": "SUCCESS",
             "imported_count": len(imported_items),
+            "new_skills_added": new_skills_count,
             "items": imported_items[:10],
         }
 

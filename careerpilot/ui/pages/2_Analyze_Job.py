@@ -17,8 +17,7 @@ st.set_page_config(page_title="Analyze Job — CareerPilot AI", page_icon="🔍"
 from careerpilot.services.auth_service import AuthService
 from careerpilot.core.config import settings
 
-if not settings.is_demo_mode:
-    AuthService.require_auth()
+AuthService.require_auth()
 
 
 st.title("🔍 Job Description Analysis & Candidate Fit Engine")

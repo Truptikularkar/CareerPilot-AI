@@ -97,8 +97,10 @@ class CareerPilotService:
             jd.location = job_location
 
         # 1. Save Job and Analysis in DB
+        jd.id = analysis.job_id
+        active_cid = settings.active_candidate_id
         JobRepository.save_job_description(jd)
-        JobRepository.save_job_analysis(analysis)
+        JobRepository.save_job_analysis(analysis, candidate_id=active_cid)
 
         # 2. Create / Update Application record
         app_id = f"app_{analysis.job_id.replace('job_', '')}"
@@ -115,9 +117,10 @@ class CareerPilotService:
             system_rec=analysis.recommendation,
             user_dec=analysis.recommendation,
             status=ApplicationStatus.ANALYZED,
+            candidate_id=active_cid,
         )
 
-        logger.info("CareerPilotService: Successfully analyzed job '%s' -> Application '%s'", analysis.job_id, app.application_id)
+        logger.info("CareerPilotService: Successfully analyzed job '%s' -> Application '%s' (Candidate: %s)", analysis.job_id, app.application_id, active_cid)
         return analysis, app
 
     # -------------------------------------------------------------------------
@@ -133,14 +136,17 @@ class CareerPilotService:
 
     @classmethod
     def list_applications(cls, filter_criteria: Optional[ApplicationFilter] = None) -> List[Application]:
+        cand_id = getattr(filter_criteria, "candidate_id", None) if filter_criteria else None
+        target_cid = cand_id or settings.active_candidate_id
         if not filter_criteria:
-            return ApplicationRepository.list_applications()
+            return ApplicationRepository.list_applications(candidate_id=target_cid)
         return ApplicationRepository.list_applications(
             status=filter_criteria.status,
             recommendation=filter_criteria.recommendation,
             role_category=filter_criteria.role_category,
             location=filter_criteria.location,
             search_query=filter_criteria.search_query,
+            candidate_id=target_cid,
         )
 
     @classmethod
@@ -218,7 +224,7 @@ class CareerPilotService:
         resume_ver_db = ResumeVersionDB(
             id=resume.id,
             job_id=app.job_id,
-            candidate_id="trupti_kularkar",
+            candidate_id=getattr(resume, "candidate_id", None) or getattr(app, "candidate_id", None) or settings.active_candidate_id,
             strategy_type=resume.strategy.strategy_type.value,
             version_tag=version_tag,
             tailored_resume_json=resume.model_dump(),
@@ -370,7 +376,7 @@ class CareerPilotService:
         prep_db = InterviewPrepDB(
             id=prep_id,
             job_id=app.job_id,
-            candidate_id="trupti_kularkar",
+            candidate_id=getattr(app, "candidate_id", None) or settings.active_candidate_id,
             target_role=app.job_title,
             readiness_score=readiness_score,
             seed_json=prep_state.get("readiness_seed", {}).model_dump() if hasattr(prep_state.get("readiness_seed"), "model_dump") else prep_state.get("readiness_seed", {}),
@@ -441,8 +447,9 @@ class CareerPilotService:
     # 6. Analytics & Intelligence
     # -------------------------------------------------------------------------
     @classmethod
-    def get_dashboard_metrics(cls) -> DashboardMetrics:
-        return AnalyticsRepository.get_dashboard_metrics()
+    def get_dashboard_metrics(cls, candidate_id: Optional[str] = None) -> DashboardMetrics:
+        cid = candidate_id or settings.active_candidate_id
+        return AnalyticsRepository.get_dashboard_metrics(candidate_id=cid)
 
     @classmethod
     def get_skill_gaps_summary(cls) -> SkillGapSummary:
@@ -452,9 +459,10 @@ class CareerPilotService:
     # 7. Candidate Profile Management & RAG Sync
     # -------------------------------------------------------------------------
     @classmethod
-    def get_candidate_profile(cls, candidate_id: str = "trupti_kularkar"):
+    def get_candidate_profile(cls, candidate_id: Optional[str] = None):
         from careerpilot.services.candidate_service import CandidateService
-        return CandidateService.get_active_profile(candidate_id=candidate_id)
+        cid = candidate_id or settings.active_candidate_id
+        return CandidateService.get_active_profile(candidate_id=cid)
 
     @classmethod
     def save_candidate_profile(cls, profile, change_summary: str = "Updated profile", changed_sections: Optional[List[str]] = None):
